@@ -1,4 +1,5 @@
 import sys
+from pathlib import Path
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QPixmap
@@ -28,6 +29,7 @@ from PyQt5.QtWidgets import (
     QFormLayout,
     QGridLayout
 )
+#from encryption_utils import Password
 
 class TabBar(QtWidgets.QTabBar):
     def tabSizeHint(self, index):
@@ -76,63 +78,52 @@ class SplashScreen(QSplashScreen):
         label.setAlignment(Qt.AlignCenter)
         label.setGeometry(0, pixmap.height() - 30, pixmap.width(), 30)
 
-# Signup Screen class
-class SignupScreen(QWidget):
+class LoginScreen(QWidget):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("Sign Up")
-        self.setFixedSize(300, 200)
+        self.initUI()
 
-        # Layout setup
+    def initUI(self):
+        # Set up layout
         layout = QVBoxLayout()
 
-        # Password input
-        self.password_input = QLineEdit(self)
-        self.password_input.setEchoMode(QLineEdit.Password)
-        self.password_input.setPlaceholderText("Enter password")
+        # Title label
+        self.label = QLabel('Enter Password')
+        layout.addWidget(self.label)
+
+        # Password input field
+        self.password_input = QLineEdit()
+        self.password_input.setEchoMode(QLineEdit.Password)  # Hide password text
         layout.addWidget(self.password_input)
 
-        # Password confirmation input
-        self.confirm_password_input = QLineEdit(self)
-        self.confirm_password_input.setEchoMode(QLineEdit.Password)
-        self.confirm_password_input.setPlaceholderText("Confirm password")
-        layout.addWidget(self.confirm_password_input)
+        # Submit button
+        self.submit_button = QPushButton('Submit')
+        self.submit_button.clicked.connect(self.check_password)
+        layout.addWidget(self.submit_button)
 
-        # Signup button
-        self.signup_button = QPushButton("Sign Up", self)
-        self.signup_button.clicked.connect(self.signup)
-        layout.addWidget(self.signup_button)
-
-        # Status label for feedback
-        self.status_label = QLabel("", self)
-        layout.addWidget(self.status_label)
-
+        # Set the layout
         self.setLayout(layout)
 
-    def signup(self):
+        # Center the window and set title
+        self.setWindowTitle("Login Screen")
+        self.resize(900, 600)
+        self.setFixedSize(self.size())  # Fix size to prevent resizing
+
+    # TODO
+    def check_password(self):
+        
         password = self.password_input.text()
-        confirm_password = self.confirm_password_input.text()
 
-        if password != confirm_password:
-            self.status_label.setText("Passwords do not match.")
-            return
+        # Read from hashed password file and grab salt/hash
 
-        if not password:
-            self.status_label.setText("Password cannot be empty.")
-            return
+        # Using input, salt, and hash, recompute the hash and check if it is correct
+        # p = Password(password)
+        # return p.check(hash, salt)
+        self.label.setText("Login successful")
+        self.password_input.clear()
 
-        # Hash the password
-        hashed_password = hashlib.sha256(password.encode()).hexdigest()
-
-        # Save the hashed password to a file
-        try:
-            with open("hashed_password.pap", "w") as file:
-                file.write(hashed_password)
-            self.status_label.setText("Sign-up successful!")
-            self.close()  # Close the signup screen
-        except IOError as e:
-            self.status_label.setText("Error saving password.")
-            print(f"Error: {e}")
+        return True
+        
 
 # Subclass QMainWindow to customize your application's main window
 class MainWindow(QMainWindow):
@@ -178,17 +169,28 @@ def main():
     import time
     time.sleep(3)
 
-    login_window = LoginWindow()
-    login_window.show()
-    splash.finish(login_window)
+    # Check if the Hashed Password file exists
+    hashedpass_file = Path('hashedpass.pap')
+    if hashedpass_file.is_file():
 
-    window = MainWindow(  )
+        # Display login screen
+        login = LoginScreen()
+        login.show()
+        splash.finish(login)
+    
+    # If it is not, ask the user for a password and create the file
+    #else:    
+        
+        # Display signup screen
+        #signup = SignupScreen()
+        #signup.show()
+        #splash.finish(signup)
+    
+    window = MainWindow()
     window.resize( 900, 600 ) #width, height
     window.show()
-    #splash.finish(window)
-    
-   
-    app.exec()
+
+    sys.exit(app.exec())
     
 if __name__ == "__main__":
     main() #call main

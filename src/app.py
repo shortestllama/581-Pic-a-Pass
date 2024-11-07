@@ -79,11 +79,13 @@ class SplashScreen(QSplashScreen):
         label.setGeometry(0, pixmap.height() - 30, pixmap.width(), 30)
 
 class LoginScreen(QWidget):
-    def __init__(self):
+    def __init__(self, next_window):
         super().__init__()
-        self.initUI()
+        self.initUI(next_window)
 
-    def initUI(self):
+    def initUI(self, next_window):
+        self.next_window = next_window
+
         # Set up layout
         layout = QVBoxLayout()
 
@@ -119,11 +121,74 @@ class LoginScreen(QWidget):
         # Using input, salt, and hash, recompute the hash and check if it is correct
         # p = Password(password)
         # return p.check(hash, salt)
+        #IF PASSWORD MATCHES:
         self.label.setText("Login successful")
         self.password_input.clear()
+        self.close()
+        self.next_window.show()
 
-        return True
-        
+# Signup Screen class
+class SignupScreen(QWidget):
+    def __init__(self, next_window):
+        super().__init__()
+        self.setWindowTitle("Sign Up")
+        self.setFixedSize(300, 200)
+
+        self.next_window = next_window
+
+        # Layout setup
+        layout = QVBoxLayout()
+
+        # Password input
+        self.password_input = QLineEdit(self)
+        self.password_input.setEchoMode(QLineEdit.Password)
+        self.password_input.setPlaceholderText("Enter password")
+        layout.addWidget(self.password_input)
+
+        # Password confirmation input
+        self.confirm_password_input = QLineEdit(self)
+        self.confirm_password_input.setEchoMode(QLineEdit.Password)
+        self.confirm_password_input.setPlaceholderText("Confirm password")
+        layout.addWidget(self.confirm_password_input)
+
+        # Signup button
+        self.signup_button = QPushButton("Sign Up", self)
+        self.signup_button.clicked.connect(self.signup)
+        layout.addWidget(self.signup_button)
+
+        # Status label for feedback
+        self.status_label = QLabel("", self)
+        layout.addWidget(self.status_label)
+
+        self.setLayout(layout)
+
+    def signup(self):
+        password = self.password_input.text()
+        confirm_password = self.confirm_password_input.text()
+
+        #TODO
+        # add functionality to make sure the password follows NIST standards
+        if password != confirm_password:
+            self.status_label.setText("Passwords do not match.")
+            return
+
+        if not password:
+            self.status_label.setText("Password cannot be empty.")
+            return
+
+        # Hash the password
+        #hashed_password = hashlib.sha256(password.encode()).hexdigest()
+
+        # Save the hashed password to a file
+        try:
+            with open("hashed_password.pap", "w") as file:
+                file.write(password) #hashed_password)
+            self.status_label.setText("Sign-up successful!")
+            self.close()  # Close the signup screen
+            self.next_window.show()
+        except IOError as e:
+            self.status_label.setText("Error saving password.")
+            print(f"Error: {e}")
 
 # Subclass QMainWindow to customize your application's main window
 class MainWindow(QMainWindow):
@@ -169,26 +234,33 @@ def main():
     import time
     time.sleep(3)
 
+    window = MainWindow()
+    window.resize( 900, 600 )
+
     # Check if the Hashed Password file exists
-    hashedpass_file = Path('hashedpass.pap')
+    hashedpass_file = Path('hashed_password.pap')
     if hashedpass_file.is_file():
 
         # Display login screen
-        login = LoginScreen()
+        #INITIALIZE THE LOGINSCREEN OUTSIDE THIS IF STATEMENT
+        #IF WE DECIDE LATER TO GO FROM SIGNUP TO LOGIN INSTEAD
+        #OF SIGNUP TO MAIN
+        login = LoginScreen(window)
         login.show()
         splash.finish(login)
     
     # If it is not, ask the user for a password and create the file
-    #else:    
+    else:    
         
         # Display signup screen
-        #signup = SignupScreen()
-        #signup.show()
-        #splash.finish(signup)
+        signup = SignupScreen(window) #CHANGE THIS TO LOGIN IF WE
+                                      #MAKE THAT CHANGE
+        signup.show()
+        splash.finish(signup)
     
-    window = MainWindow()
-    window.resize( 900, 600 ) #width, height
-    window.show()
+    #window = MainWindow()
+    #window.resize( 900, 600 ) #width, height
+    #window.show()
 
     sys.exit(app.exec())
     

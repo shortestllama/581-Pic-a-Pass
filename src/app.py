@@ -178,9 +178,9 @@ def main():
     import time
     time.sleep(3)
 
-    login_window = LoginWindow()
-    login_window.show()
-    splash.finish(login_window)
+    signup_window = SignupWindow()
+    signup_window.show()
+    splash.finish(signup_window)
 
     window = MainWindow(  )
     window.resize( 900, 600 ) #width, height

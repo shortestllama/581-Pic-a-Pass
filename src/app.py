@@ -76,6 +76,64 @@ class SplashScreen(QSplashScreen):
         label.setAlignment(Qt.AlignCenter)
         label.setGeometry(0, pixmap.height() - 30, pixmap.width(), 30)
 
+# Signup Screen class
+class SignupScreen(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle("Sign Up")
+        self.setFixedSize(300, 200)
+
+        # Layout setup
+        layout = QVBoxLayout()
+
+        # Password input
+        self.password_input = QLineEdit(self)
+        self.password_input.setEchoMode(QLineEdit.Password)
+        self.password_input.setPlaceholderText("Enter password")
+        layout.addWidget(self.password_input)
+
+        # Password confirmation input
+        self.confirm_password_input = QLineEdit(self)
+        self.confirm_password_input.setEchoMode(QLineEdit.Password)
+        self.confirm_password_input.setPlaceholderText("Confirm password")
+        layout.addWidget(self.confirm_password_input)
+
+        # Signup button
+        self.signup_button = QPushButton("Sign Up", self)
+        self.signup_button.clicked.connect(self.signup)
+        layout.addWidget(self.signup_button)
+
+        # Status label for feedback
+        self.status_label = QLabel("", self)
+        layout.addWidget(self.status_label)
+
+        self.setLayout(layout)
+
+    def signup(self):
+        password = self.password_input.text()
+        confirm_password = self.confirm_password_input.text()
+
+        if password != confirm_password:
+            self.status_label.setText("Passwords do not match.")
+            return
+
+        if not password:
+            self.status_label.setText("Password cannot be empty.")
+            return
+
+        # Hash the password
+        hashed_password = hashlib.sha256(password.encode()).hexdigest()
+
+        # Save the hashed password to a file
+        try:
+            with open("hashed_password.pap", "w") as file:
+                file.write(hashed_password)
+            self.status_label.setText("Sign-up successful!")
+            self.close()  # Close the signup screen
+        except IOError as e:
+            self.status_label.setText("Error saving password.")
+            print(f"Error: {e}")
+
 # Subclass QMainWindow to customize your application's main window
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -113,12 +171,16 @@ class MainWindow(QMainWindow):
 
 def main():
     app = QApplication(sys.argv)
-    #splash = SplashScreen()
-    #splash.show()
+    splash = SplashScreen()
+    splash.show()
 
     # Simulate loading process
-    #import time
-    #time.sleep(3)
+    import time
+    time.sleep(3)
+
+    login_window = LoginWindow()
+    login_window.show()
+    splash.finish(login_window)
 
     window = MainWindow(  )
     window.resize( 900, 600 ) #width, height

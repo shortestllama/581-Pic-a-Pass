@@ -52,15 +52,21 @@ class APIChecker:
         # Return false iff the suffix isnt in the response
         return 0
 
-def create_breach_page(main_window):
+# This will create the breach page
+def create_breach_page(main_window) -> QWidget:
+    # Initialize the api checker and the ui
     checker = APIChecker()
     breach_page = QWidget(main_window)
     layout = QFormLayout()
     breach_page.setLayout(layout)
+    # Open the password file
     with open( 'passwords.csv', 'r' ) as file:
         reader = csv.reader( file )
+        # Loop through the entries and check the second entry with the api
         for row in reader:
             num_breaches = checker.check_password(row[2])
+            # If the password is in the api response, print the result
             if (num_breaches > 0):
                 layout.addRow(QLabel(f"Password for {row[0]} breached {num_breaches} times!"))
+    # Return the widget for adding to the main window
     return breach_page

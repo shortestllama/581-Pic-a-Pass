@@ -16,4 +16,4 @@
 **/*.swo
 
 # Ignore mac
-**/*.dSYM
+**/.DS_STORE

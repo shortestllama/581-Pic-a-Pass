@@ -1,0 +1,19 @@
+# Ignore python cache related things
+**/__pycache__/
+**/*.pyc
+**/*.pyo
+**/*.pyd
+
+# Ignore virtual environment stuff
+**/venv/
+**/env/
+**/.env/
+
+# Ignore editor stuff
+**/.vscode/
+**/.idea/
+**/*.swp
+**/*.swo
+
+# Ignore mac
+**/*.dSYM

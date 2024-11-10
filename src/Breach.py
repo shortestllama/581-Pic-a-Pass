@@ -15,14 +15,15 @@ class APIChecker:
         try:
             # Perform a get request with the format: api_url/hash_prefix 
             response = requests.get(f"{self.url}{hash_prefix}")
-            response.raise_for_status()
+            if response.status_code != 200:
+                raise ConnectionError(f"API returned status code {response.status_code}")
             # Return the response
             return response.text
         except requests.RequestException as e:
             raise ConnectionError(f"Failed to check password: {str(e)}")
 
     # This will actually check the password
-    def check_password(self, password: str):
+    def check_password(self, password: str) -> int:
         # Generate the hash, and then split it into prefix and suffix
         password_hash = self._get_sha1_hash(password)
         hash_prefix = password_hash[:5]
@@ -40,7 +41,7 @@ class APIChecker:
             suffix, count = line.split(':')
             if suffix == hash_suffix:
                 # Return the number of data breaches
-                return True, int(count)
+                return int(count)
 
         # Return false iff the suffix isnt in the response
-        return False, 0
+        return 0

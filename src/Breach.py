@@ -64,9 +64,13 @@ def create_breach_page(main_window) -> QWidget:
         reader = csv.reader( file )
         # Loop through the entries and check the second entry with the api
         for row in reader:
-            num_breaches = checker.check_password(row[2])
-            # If the password is in the api response, print the result
-            if (num_breaches > 0):
-                layout.addRow(QLabel(f"Password for {row[0]} breached {num_breaches} times!"))
+            try:
+                # If the password is in the api response, print the result
+                num_breaches = checker.check_password(row[2])
+                if (num_breaches > 0):
+                    layout.addRow(QLabel(f"Password for {row[0]} breached {num_breaches} times!"))
+            except ConnectionError as e:
+                layout.addRow(QLabel(f"Error in check_password: {str(e)}"))
+
     # Return the widget for adding to the main window
     return breach_page

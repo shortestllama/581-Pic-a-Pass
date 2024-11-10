@@ -1,3 +1,4 @@
+from Breach import create_breach_page
 import sys
 import csv
 from PyQt5.QtWidgets import QMainWindow, QWidget
@@ -9,6 +10,7 @@ from PyQt5.QtWidgets import (
     QTableView,
     QLineEdit,
     QVBoxLayout,
+    QLabel,
     QFormLayout,
     QGridLayout,
     QPushButton,
@@ -36,12 +38,8 @@ class MainWindow(QMainWindow):
         pw_page = create_pw_page( self )        
         
         #breach page
-        breach_page = QWidget(self)
-        layout = QFormLayout()
-        breach_page.setLayout(layout)
-        layout.addRow('Phone Number:', QLineEdit(self))
-        layout.addRow('Email Address:', QLineEdit(self))
-        
+        breach_page = create_breach_page(self)
+
         #Tabs
         w = TabWidget.TabWidget()
         w.setStyleSheet( "QTabBar::tab {width: 100px; height: 200px;}" ); #set stylesheet for tab sizes

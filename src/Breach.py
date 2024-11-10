@@ -1,5 +1,11 @@
 import hashlib
 import requests
+import csv
+from PyQt5.QtWidgets import QMainWindow, QWidget
+from PyQt5.QtWidgets import (
+    QLabel,
+    QFormLayout,
+)
 
 class APIChecker:
     # Initialize the checker with the api url
@@ -45,3 +51,16 @@ class APIChecker:
 
         # Return false iff the suffix isnt in the response
         return 0
+
+def create_breach_page(main_window):
+    checker = APIChecker()
+    breach_page = QWidget(main_window)
+    layout = QFormLayout()
+    breach_page.setLayout(layout)
+    with open( 'passwords.csv', 'r' ) as file:
+        reader = csv.reader( file )
+        for row in reader:
+            num_breaches = checker.check_password(row[2])
+            if (num_breaches > 0):
+                layout.addRow(QLabel(f"Password for {row[0]} breached {num_breaches} times!"))
+    return breach_page

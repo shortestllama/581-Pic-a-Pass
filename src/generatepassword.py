@@ -1,4 +1,4 @@
-import random
+import secrets 
 import string
 
 class PasswordGenerator:
@@ -12,12 +12,24 @@ class PasswordGenerator:
         - use_lower (bool): Include lowercase characters
         - use_digits (bool): Include digits
         - use_specials (bool): Include special characters
+        - Constant Parameters:
+        - MIN_LOWERCASE (int): Min Number of lowercase to include in final password
+        - MIN_UPPERCASE(int): Min Number of uppercase to include in final password
+        - MIN_DIGITS(int): Min Number of numbers to include in final password
+        - MIN_SPECIAL(int): Min Number of special characters to include in final password
         '''
         self.length = length
         self.use_upper = use_upper
         self.use_lower = use_lower
         self.use_digits = use_digits
         self.use_specials = use_specials
+        self.MIN_LOWERCASE = 2
+        self.MIN_UPPERCASE = 2
+        self.MIN_DIGITS = 2
+        self.MIN_SPECIAL = 2
+    
+    def _is_special_char(self, char) -> bool:
+        return char in "!@#$%^&*()-_=+<>?{}[]"
 
     def generate_password(self) -> str:
         '''
@@ -38,5 +50,29 @@ class PasswordGenerator:
         if not chars:
             raise ValueError("No characters available for genereration.")
 
-        password = ''.join(random.choice(chars) for _ in range(self.length))
-        return password
+        # While true loop until a good password is generated
+        while True:
+            password = ''.join(secrets.choice(chars) for _ in range(self.length))
+            
+            # Only check conditions for enabled character types
+            meets_requirements = True
+            
+            # Will go through the password and see if it meets requirements according to specifications
+            if self.use_lower:
+                lower_count = sum(c.islower() for c in password)
+                meets_requirements &= lower_count >= self.MIN_LOWERCASE
+                
+            if self.use_upper:
+                upper_count = sum(c.isupper() for c in password)
+                meets_requirements &= upper_count >= self.MIN_UPPERCASE
+                
+            if self.use_digits:
+                digit_count = sum(c.isdigit() for c in password)
+                meets_requirements &= digit_count >= self.MIN_DIGITS
+                
+            if self.use_specials:
+                special_count = sum(self._is_special_char(c) for c in password)
+                meets_requirements &= special_count >= self.MIN_SPECIAL
+                
+            if meets_requirements:
+                return password

@@ -179,7 +179,7 @@ class MainWindow(QMainWindow):
 
 def main():
     app = QApplication(sys.argv)
-    splash = SplashScreen()
+    splash = SplashScreen.SplashScreen()
     splash.show()
 
     # Simulate loading process
@@ -199,7 +199,7 @@ def main():
         #OF SIGNUP TO MAIN
         login = LoginScreen(window)
         login.show()
-        #splash.finish(login)
+        splash.finish(login)
     
     # If it is not, ask the user for a password and create the file
     else:    
@@ -208,7 +208,7 @@ def main():
         signup = SignupScreen(window) #CHANGE THIS TO LOGIN IF WE
                                       #MAKE THAT CHANGE
         signup.show()
-    splash.finish(signup)
+        splash.finish(signup)
     
     #window = MainWindow()
     #window.resize( 900, 600 ) #width, height

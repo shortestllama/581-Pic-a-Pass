@@ -2,14 +2,13 @@ import sys
 import csv
 import time
 from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QFormLayout, QLineEdit, QPushButton, QMessageBox
-class create(QWidget):
-    def __init__(self):
+class AddPasswordProfile(QWidget):
+    def __init__(self, super_window, super_object ):
         super().__init__()
-        self.initUI()
+        self.initUI( super_window, super_object )
 
-    def initUI(self):
+    def initUI( self, super_window, super_object ):
         # Set up the form layout
-        self.setWindowTitle("Form to CSV")
         layout = QVBoxLayout()
         form_layout = QFormLayout()
         
@@ -30,6 +29,9 @@ class create(QWidget):
         # Save button
         save_button = QPushButton("Save to CSV")
         save_button.clicked.connect(self.save_to_csv)
+        save_button.clicked.connect( super_window.close )
+        #refresh the main page
+        save_button.clicked.connect( super_object.refresh )
         layout.addWidget(save_button)
         
         self.setLayout(layout)
@@ -49,11 +51,11 @@ class create(QWidget):
         
         # Save data to CSV file
         try:
-            with open(file_path, mode="a", newline="\n") as file:
+            with open(file_path, mode="a", newline="") as file:
                 writer = csv.writer(file)
                 writer.writerow(data)
-            QMessageBox.information(self, "Success", "Data saved to CSV file successfully!")
-            
+            #QMessageBox.information(self, "Success", "Data saved to CSV file successfully!")
+            #Don't bring up success box
             # Clear the input fields
             self.input1.clear()
             self.input2.clear()

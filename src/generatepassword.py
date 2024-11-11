@@ -1,8 +1,29 @@
+import math
 import secrets 
 import string
 
+SPECIAL_CHARS = "!@#$%^&*()-_=+<>?{}[]"
+
+#Determines if a character is a special character
+def _is_special_char(char) -> bool:
+    return char in SPECIAL_CHARS
+
+def calculate_entropy(password: str) -> float:
+    # Calculate password entropy in bits
+    char_set_size = 0
+    if any(c.isupper() for c in password):
+        char_set_size += len(string.ascii_uppercase)
+    if any(c.islower() for c in password):
+        char_set_size += len(string.ascii_lowercase)
+    if any(c.isdigit() for c in password):
+        char_set_size += len(string.digits)
+    if any(_is_special_char(c) for c in password):
+        char_set_size += len(SPECIAL_CHARS)
+        
+    return len(password) * math.log2(char_set_size)
+
 class PasswordGenerator:
-    def __init__(self, length=12, use_upper=True, use_lower=True, use_digits=True, use_specials=True):
+    def __init__(self, length=18, use_upper=True, use_lower=True, use_digits=True, use_specials=True):
         '''
         Initialize the generator 
 
@@ -17,6 +38,7 @@ class PasswordGenerator:
         - MIN_UPPERCASE(int): Min Number of uppercase to include in final password
         - MIN_DIGITS(int): Min Number of numbers to include in final password
         - MIN_SPECIAL(int): Min Number of special characters to include in final password
+        - MIN_ENTROPY(float): Min entropy value that a password can have
         '''
         self.length = length
         self.use_upper = use_upper
@@ -27,9 +49,8 @@ class PasswordGenerator:
         self.MIN_UPPERCASE = 2
         self.MIN_DIGITS = 2
         self.MIN_SPECIAL = 2
+        self.MIN_ENTROPY = 100.0
     
-    def _is_special_char(self, char) -> bool:
-        return char in "!@#$%^&*()-_=+<>?{}[]"
 
     def generate_password(self) -> str:
         '''
@@ -46,7 +67,7 @@ class PasswordGenerator:
         if self.use_digits:
            chars += string.digits
         if self.use_specials:
-           chars += "!@#$%^&*()-_=+<>?{}[]"
+           chars += SPECIAL_CHARS
         if not chars:
             raise ValueError("No characters available for genereration.")
 
@@ -71,8 +92,8 @@ class PasswordGenerator:
                 meets_requirements &= digit_count >= self.MIN_DIGITS
                 
             if self.use_specials:
-                special_count = sum(self._is_special_char(c) for c in password)
+                special_count = sum(_is_special_char(c) for c in password)
                 meets_requirements &= special_count >= self.MIN_SPECIAL
                 
-            if meets_requirements:
+            if meets_requirements and calculate_entropy(password) >= self.MIN_ENTROPY:
                 return password

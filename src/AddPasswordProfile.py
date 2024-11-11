@@ -1,6 +1,7 @@
 import sys
 import csv
 import time
+from generatepassword import PasswordGenerator
 from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QFormLayout, QLineEdit, QPushButton, QMessageBox
 class AddPasswordProfile(QWidget):
     def __init__(self, super_window, super_object ):
@@ -25,7 +26,10 @@ class AddPasswordProfile(QWidget):
         form_layout.addRow("Notes:", self.input4)
         #timetamp is automatic
         layout.addLayout(form_layout)
-        
+        # Generate button
+        generate_button = QPushButton("Generate Password")
+        generate_button.clicked.connect( self.generate_pw )
+        layout.addWidget( generate_button )
         # Save button
         save_button = QPushButton("Save to CSV")
         save_button.clicked.connect(self.save_to_csv)
@@ -64,3 +68,6 @@ class AddPasswordProfile(QWidget):
             
         except Exception as e:
             QMessageBox.critical(self, "Error", f"Failed to save data: {e}")
+    def generate_pw( self ):
+        pw = PasswordGenerator()
+        self.input3.setText( pw.generate_password() )

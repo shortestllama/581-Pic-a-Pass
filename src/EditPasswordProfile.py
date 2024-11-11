@@ -1,6 +1,7 @@
 import sys
 import csv
 import time
+from generatepassword import PasswordGenerator
 from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QFormLayout, QLineEdit, QPushButton, QMessageBox, QLabel, QHBoxLayout
 from PyQt5.QtGui import QFont
 class EditPasswordProfile(QWidget):
@@ -92,6 +93,10 @@ class EditPasswordProfile(QWidget):
              """)
         self.layout.addWidget( self.label_noteReal )
         #Add "Edit Password Profile" button to the bottom
+        # Generate button
+        generate_button = QPushButton("Generate Password")
+        generate_button.clicked.connect( self.generate_pw )
+        self.layout.addWidget( generate_button )
         # Save button
         save_button = QPushButton("Save to CSV")
         save_button.clicked.connect(self.save_to_csv)
@@ -133,3 +138,6 @@ class EditPasswordProfile(QWidget):
         with open(file_path, mode='w', newline='') as csv_file:
             writer = csv.writer(csv_file)
             writer.writerows(lines_to_keep)
+    def generate_pw( self ):
+        pw = PasswordGenerator()
+        self.label_pwReal.setText( pw.generate_password() )

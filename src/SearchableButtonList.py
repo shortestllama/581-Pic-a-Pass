@@ -160,7 +160,7 @@ class SearchableButtonList(QWidget):
         with open( 'passwords.csv', 'r' ) as file:
             reader = csv.reader( file )
             data = list( reader )
-        data.sort( key=lambda x: x[-1] ) #sort by timestamp
+        data.sort( key=lambda x: x[-1], reverse=True ) #sort by timestamp
         for label in data: #Labels look like: weburl, username, password, notes, timestamp
             button = QPushButton(label[ 0 ], self)
             button.setVisible(True) #make them display in the scroll area 

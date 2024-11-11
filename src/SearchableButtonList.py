@@ -5,23 +5,14 @@ from PyQt5 import QtCore
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QFont
 import AddPasswordProfile
-class AddPasswordProfiles( QWidget ):
-    def __init__( self ):
+import EditPasswordProfile
+import csv #for reading from csv and creating buttons
+class PasswordProfile( QWidget ):
+    def __init__(self, label, pw_page):
         super().__init__()
-        #Pull up password profile screen
-        self.setWindowTitle( "Create Password Profile" ) #set window title
-        self.resize( 900, 600 ) #standard size
-        widg = AddPasswordProfile.create() #create widget to create a new password profile
-        layout = QVBoxLayout() #create layout for this widget
-        layout.addWidget( widg ) #add the password profile class oto the layout
-        self.setLayout( layout ) #set the layout to this widget
-        self.show() #show this window
-class PasswordPofile( QWidget ):
-    def __init__(self, label):
-        super().__init__()
-        self.initUI(label)
+        self.initUI(label, pw_page )
 
-    def initUI(self, label):
+    def initUI(self, label, pw_page ):
         self.setWindowTitle("Password Profile")
         self.resize(900, 600)
         
@@ -80,55 +71,42 @@ class PasswordPofile( QWidget ):
         self.edit_pw.setVisible( True ) #display 
         self.edit_pw.resize( 250, 150 ) #change size
         self.edit_pw.setFont(QFont("Arial", 16))  # Set font size to 16
+        self.edit_pw.clicked.connect( lambda: self.edit_Password( label, pw_page ) )
         edit_pw_layout.addWidget( self.edit_pw ) #add button to right side of horz layout
         layout.addLayout( edit_pw_layout ) #add button to bottom of vertical layout
         self.setLayout(layout)
         self.show()
-
+    def edit_Password( self, label, pw_page ):
+        self.edit_password_window = QWidget( )
+        #Pull up password profile screen
+        self.edit_password_window.setWindowTitle( "Edit Password Profile" ) #set window title
+        self.edit_password_window.resize( 900, 600 ) #standard size
+        widg = EditPasswordProfile.EditPasswordProfile( self.edit_password_window, pw_page, label, self ) #create widget to create a new password profile
+        layout = QVBoxLayout() #create layout for this widget
+        layout.addWidget( widg ) #add the password profile class oto the layout
+        self.edit_password_window.setLayout( layout ) #set the layout to this widget
+        self.edit_password_window.show() #show this window
 class SearchableButtonList(QWidget):
-    def __init__(self, button_labels):
+    def __init__(self):
         super().__init__()
-        self.initUI(button_labels)
+        self.initUI()
 
-    def initUI(self, button_labels):
+    def initUI(self):
         # Layout setup
-        main_layout = QVBoxLayout(self)
+        self.main_layout = QVBoxLayout(self)
         
         # Search bar setup
         self.search_bar = QLineEdit(self)
         self.search_bar.setPlaceholderText("Search...")
         self.search_bar.textChanged.connect(self.filter_buttons)
         self.search_bar.setFont(QFont("Arial", 16))  # Set font size to 16
-        main_layout.addWidget(self.search_bar)
+        self.main_layout.addWidget(self.search_bar)
         
         # Scrollable area setup
-        scroll_area = QScrollArea(self)
-        scroll_area.setWidgetResizable(True)
-        scroll_content = QWidget()
-        self.scroll_layout = QVBoxLayout(scroll_content)
-        scroll_area.setWidget(scroll_content)
-        scroll_area.setStyleSheet("""
-            QScrollArea {
-                border: 2px solid black;
-                border-radius: 10px; /* Adjust the radius as needed */
-                
-            }
-            QScrollArea > QWidget > QWidget {
-                background: White; /* Set the background color of the content area */
-                border-radius: 10px;
-            }
-        """)
-        main_layout.addWidget(scroll_area)
-        
-        # Create buttons
-        self.buttons = []
-        for label in button_labels: #Labels look like: weburl, username, password, notes, timestamp
-            button = QPushButton(label[ 0 ], self)
-            button.setVisible(True) #make them display in the scroll area 
-            button.clicked.connect(lambda checked, l=label: self.button_clicked(l))  # Connect click event
-            button.setFont(QFont("Arial", 16))  # Set font size to 16
-            self.buttons.append(button)
-            self.scroll_layout.addWidget(button)
+        self.scroll_area = QScrollArea(self)
+        self.scroll_area.setWidgetResizable(True)
+        self.main_layout.addWidget( self.scroll_area )
+        self.refresh( )
         #Add "Add password" button to the bottom
         add_pw_layout = QHBoxLayout() #create a new layout on the bottom to right justify the add button.
         add_pw_layout.addStretch() #sets left area of horz to empty to push the button to right justify
@@ -136,9 +114,9 @@ class SearchableButtonList(QWidget):
         self.add_pw.setVisible( True ) #display 
         self.add_pw.resize( 250, 150 ) #change size
         self.add_pw.setFont(QFont("Arial", 16))  # Set font size to 16
-        self.add_pw.clicked.connect(lambda checked, l=label: self.add_password())  # Connect click event add password
+        self.add_pw.clicked.connect(lambda: self.add_password())  # Connect click event add password
         add_pw_layout.addWidget( self.add_pw ) #add button to right side of horz layout
-        main_layout.addLayout( add_pw_layout ) #add button to bottom of vertical layout
+        self.main_layout.addLayout( add_pw_layout ) #add button to bottom of vertical layout
         
 
     def filter_buttons(self):
@@ -149,6 +127,44 @@ class SearchableButtonList(QWidget):
         #label is all of the information
         #Labels look like: weburl, username, password, notes, timestamp
         # Open a new window with the password profile
-        self.button_window = PasswordPofile(label)
+        self.button_window = PasswordProfile(label, self ) #pass in this window as suber object so it can be refreshed upon editing
     def add_password( self ):
-        self.add_password_window = AddPasswordProfiles()
+        self.add_password_window = QWidget()
+        #Pull up password profile screen
+        self.add_password_window.setWindowTitle( "Create Password Profile" ) #set window title
+        self.add_password_window.resize( 900, 600 ) #standard size
+        widg = AddPasswordProfile.AddPasswordProfile( self.add_password_window, self ) #create widget to create a new password profile
+        layout = QVBoxLayout() #create layout for this widget
+        layout.addWidget( widg ) #add the password profile class oto the layout
+        self.add_password_window.setLayout( layout ) #set the layout to this widget
+        self.add_password_window.show() #show this window
+    def refresh( self ):
+        #refresh data
+        scroll_content = QWidget()
+        self.scroll_layout = QVBoxLayout(scroll_content)
+        self.scroll_area.setWidget(scroll_content)
+        self.scroll_area.setStyleSheet("""
+            QScrollArea {
+                border: 2px solid black;
+                border-radius: 10px; /* Adjust the radius as needed */
+                
+            }
+            QScrollArea > QWidget > QWidget {
+                background: White; /* Set the background color of the content area */
+                border-radius: 10px;
+            }
+        """)
+        
+        # Create buttons
+        self.buttons = []
+        with open( 'passwords.csv', 'r' ) as file:
+            reader = csv.reader( file )
+            data = list( reader )
+        data.sort( key=lambda x: x[-1] ) #sort by timestamp
+        for label in data: #Labels look like: weburl, username, password, notes, timestamp
+            button = QPushButton(label[ 0 ], self)
+            button.setVisible(True) #make them display in the scroll area 
+            button.clicked.connect(lambda checked, l=label: self.button_clicked(l))  # Connect click event
+            button.setFont(QFont("Arial", 16))  # Set font size to 16
+            self.buttons.append(button)
+            self.scroll_layout.addWidget(button)

@@ -1,26 +1,6 @@
-import math
 import secrets 
 import string
-
-SPECIAL_CHARS = "!@#$%^&*()-_=+<>?{}[]"
-
-#Determines if a character is a special character
-def _is_special_char(char) -> bool:
-    return char in SPECIAL_CHARS
-
-def calculate_entropy(password: str) -> float:
-    # Calculate password entropy in bits
-    char_set_size = 0
-    if any(c.isupper() for c in password):
-        char_set_size += len(string.ascii_uppercase)
-    if any(c.islower() for c in password):
-        char_set_size += len(string.ascii_lowercase)
-    if any(c.isdigit() for c in password):
-        char_set_size += len(string.digits)
-    if any(_is_special_char(c) for c in password):
-        char_set_size += len(SPECIAL_CHARS)
-        
-    return len(password) * math.log2(char_set_size)
+from password_strength import SPECIAL_CHARS, calculate_entropy
 
 class PasswordGenerator:
     def __init__(self, length=18, use_upper=True, use_lower=True, use_digits=True, use_specials=True):
@@ -33,6 +13,7 @@ class PasswordGenerator:
         - use_lower (bool): Include lowercase characters
         - use_digits (bool): Include digits
         - use_specials (bool): Include special characters
+
         - Constant Parameters:
         - MIN_LOWERCASE (int): Min Number of lowercase to include in final password
         - MIN_UPPERCASE(int): Min Number of uppercase to include in final password
@@ -92,7 +73,7 @@ class PasswordGenerator:
                 meets_requirements &= digit_count >= self.MIN_DIGITS
                 
             if self.use_specials:
-                special_count = sum(_is_special_char(c) for c in password)
+                special_count = sum(c in SPECIAL_CHARS for c in password)
                 meets_requirements &= special_count >= self.MIN_SPECIAL
                 
             if meets_requirements and calculate_entropy(password) >= self.MIN_ENTROPY:

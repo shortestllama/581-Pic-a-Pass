@@ -127,7 +127,7 @@ class PasswordProfile( QWidget ):
         self.edit_password_window.setLayout( layout ) #set the layout to this widget
         self.edit_password_window.show() #show this window
 class SearchableButtonList(QWidget):
-     def __init__(self, label, hash, cipher):
+     def __init__(self, hash, cipher):
         super().__init__()
         self.hash = hash
         self.cipher = cipher
@@ -228,23 +228,27 @@ class SearchableButtonList(QWidget):
         with open( 'passwords.csv', 'r' ) as file:
             reader = csv.reader( file )
             data = list( reader )
-        if self.order == 1:
-            #order alphabetical
-            data.sort( key=lambda x: x[0], reverse=False ) #sort by timestamp
-        elif self.order == 2:
-            #reverse alphabetical
-            data.sort( key=lambda x: x[0], reverse=True ) #sort by timestamp
-        elif self.order == 3:
-            #newest
-            data.sort( key=lambda x: x[-1], reverse=True ) #sort by timestamp
-        else:
-            #oldest
-            data.sort( key=lambda x: x[-1], reverse=False ) #sort by timestamp
+        if (len(data) > 0):
+            if (len(data[0]) > 0): # Don't sort if list is empty
+                if self.order == 1:
+                    #order alphabetical
+                    data.sort( key=lambda x: x[0], reverse=False ) #sort by timestamp
+                elif self.order == 2:
+                    #reverse alphabetical
+                    data.sort( key=lambda x: x[0], reverse=True ) #sort by timestamp
+                elif self.order == 3:
+                    #newest
+                    data.sort( key=lambda x: x[-2], reverse=True ) #sort by timestamp
+                else:
+                    #oldest
+                    data.sort( key=lambda x: x[-2], reverse=False ) #sort by timestamp
+
         for label in data: #Labels look like: weburl, username, password, notes, timestamp, nonce
-            button = QPushButton(label[ 0 ], self)
-            button.setVisible(True) #make them display in the scroll area 
-            label[2] = self.cipher.decrypt(label[2], label[5], label[1].encode('utf-8'))
-            button.clicked.connect(lambda checked, l=label: self.button_clicked(l))  # Connect click event
-            button.setFont(QFont("Arial", 16))  # Set font size to 16
-            self.buttons.append(button)
-            self.scroll_layout.addWidget(button)
+            if len(label) > 0:
+                button = QPushButton(label[ 0 ], self)
+                button.setVisible(True) #make them display in the scroll area 
+                label[2] = self.cipher.decrypt(label[2], label[5], label[1].encode('utf-8'))
+                button.clicked.connect(lambda checked, l=label: self.button_clicked(l))  # Connect click event
+                button.setFont(QFont("Arial", 16))  # Set font size to 16
+                self.buttons.append(button)
+                self.scroll_layout.addWidget(button)

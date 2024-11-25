@@ -2,13 +2,18 @@ import sys
 import csv
 import time
 from generatepassword import PasswordGenerator
-from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QFormLayout, QLineEdit, QPushButton, QMessageBox
+from cryptoutils import PasswordCipher
+from PyQt5.QtGui import QFont
+from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QFormLayout, QLineEdit, QPushButton, QMessageBox, QLabel
+from password_strength import p_strength #password strength function
 class AddPasswordProfile(QWidget):
-    def __init__(self, super_window, super_object ):
+     def __init__(self, super_window, super_object, hash, cipher):
         super().__init__()
+        self.hash = hash
+        self.cipher = cipher
         self.initUI( super_window, super_object )
 
-    def initUI( self, super_window, super_object ):
+     def initUI( self, super_window, super_object ):
         # Set up the form layout
         layout = QVBoxLayout()
         form_layout = QFormLayout()
@@ -23,6 +28,11 @@ class AddPasswordProfile(QWidget):
         form_layout.addRow("Web URL:", self.input1)
         form_layout.addRow("Username:", self.input2)
         form_layout.addRow("Password:", self.input3)
+        #show password strength
+        self.strength_label = QLabel( "Password strength: Waiting..." )
+        self.strength_label.setFont(QFont("Arial", 14))
+        form_layout.addWidget( self.strength_label )
+        self.input3.textChanged.connect(self.check_password_strength)
         form_layout.addRow("Notes:", self.input4)
         #timetamp is automatic
         layout.addLayout(form_layout)
@@ -42,12 +52,15 @@ class AddPasswordProfile(QWidget):
 
     def save_to_csv(self):
         # Get values from input fields
+        auth_data = self.input2.text().encode('utf-8')
+        ciphertext, nonce = self.cipher.encrypt(self.input3.text(), auth_data)
         data = [
             self.input1.text(),
             self.input2.text(),
-            self.input3.text(),
+            ciphertext.decode('utf-8'),
             self.input4.text(),
-            time.time()
+            time.time(),
+            nonce.decode('utf-8')
         ]
         
         # Open file dialog to choose where to save the CSV
@@ -71,3 +84,18 @@ class AddPasswordProfile(QWidget):
     def generate_pw( self ):
         pw = PasswordGenerator()
         self.input3.setText( pw.generate_password() )
+    def check_password_strength( self ):
+        if self.input3.text() == "":
+            #do nothing, prevents crashing
+            a = 1
+        elif p_strength( self.input3.text() ) == 0:
+            #weak
+            self.strength_label.setText("Password strength: Weak")
+            self.strength_label.setStyleSheet("color: red;")
+        elif p_strength( self.input3.text() ) == 1:
+            self.strength_label.setText("Password strength: Medium")
+            self.strength_label.setStyleSheet("color: orange;")
+        else:
+            #strong
+            self.strength_label.setText("Password strength: Strong")
+            self.strength_label.setStyleSheet("color: green;")

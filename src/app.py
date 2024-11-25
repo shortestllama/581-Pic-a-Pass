@@ -1,4 +1,5 @@
 from Breach import create_breach_page
+from cryptoutils import PasswordHash, PasswordCipher 
 import sys
 import csv
 from PyQt5.QtWidgets import QMainWindow, QWidget
@@ -20,6 +21,11 @@ from PyQt5.QtWidgets import (
     QScrollArea,
     QFrame
 )
+
+# Set up hash and cipher
+hash = PasswordHash()
+cipher = PasswordCipher()
+
 def create_pw_page( self ):
     #read CSV file
     with open( 'passwords.csv', 'r' ) as file:
@@ -73,21 +79,18 @@ class LoginScreen(QWidget):
         self.resize(900, 600)
         self.setFixedSize(self.size())  # Fix size to prevent resizing
 
-    # TODO
     def check_password(self):
-        
         password = self.password_input.text()
-
-        # Read from hashed password file and grab salt/hash
-
-        # Using input, salt, and hash, recompute the hash and check if it is correct
-        # p = Password(password)
-        # return p.check(hash, salt)
-        #IF PASSWORD MATCHES:
-        self.label.setText("Login successful")
-        self.password_input.clear()
-        self.close()
-        self.next_window.show()
+        correct = hash.check_pwd(password)
+        if correct:
+            cipher.gen_key(password)
+            self.label.setText("Login successful")
+            self.password_input.clear()
+            self.close()
+            self.next_window.show()
+        else:
+            self.label.setText("Password incorrect")
+            self.password_input.clear()
 
 # Signup Screen class
 class SignupScreen(QWidget):
@@ -139,18 +142,15 @@ class SignupScreen(QWidget):
             return
 
         # Hash the password
-        #hashed_password = hashlib.sha256(password.encode()).hexdigest()
-
-        # Save the hashed password to a file
         try:
-            with open("hashed_password.pap", "w") as file:
-                file.write(password) #hashed_password)
+            hash.gen_hash(password)
+            cipher.gen_key(password)
             self.status_label.setText("Sign-up successful!")
             self.close()  # Close the signup screen
             self.next_window.show()
-        except IOError as e:
-            self.status_label.setText("Error saving password.")
-            print(f"Error: {e}")
+
+        except Exception as e:
+            self.status_label.setText("Error saving password: {e}.")
 
 # Signup Screen class
 # Subclass QMainWindow to customize your application's main window
@@ -163,9 +163,10 @@ class MainWindow(QMainWindow):
         self.setCentralWidget( wid )
         main_layout = QGridLayout()
         wid.setLayout(main_layout)
-        
+       
+
         #password page
-        self.pw_page = SearchableButtonList.SearchableButtonList( )       
+        self.pw_page = SearchableButtonList.SearchableButtonList( hash, cipher )       
         
         #breach page
         self.breach_page = create_breach_page(self)
@@ -207,7 +208,7 @@ def main():
     window.resize( 900, 600 )
 
     # Check if the Hashed Password file exists
-    hashedpass_file = Path('hashed_password.pap')
+    hashedpass_file = Path(hash.PATH)
     if hashedpass_file.is_file():
         
         # Display login screen

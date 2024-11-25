@@ -1,19 +1,23 @@
 import sys, time, pytz
 from datetime import datetime, timezone #to fix the time output
-from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QLineEdit, QPushButton, QScrollArea, QVBoxLayout, QHBoxLayout, QFrame, QLabel
+from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QLineEdit, QPushButton, QScrollArea, QVBoxLayout, QHBoxLayout, QFrame, QLabel, QDialog
 from PyQt5 import QtCore
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QFont
 import AddPasswordProfile
 import EditPasswordProfile
 import csv #for reading from csv and creating buttons
+import OptionsWindow
+from password_strength import p_strength #password strength function
 class PasswordProfile( QWidget ):
-    def __init__(self, label, pw_page):
+     def __init__(self, label, pw_page, hash, cipher):
         super().__init__()
         self.setObjectName("password_profile")
-        self.initUI(label, pw_page )
+        self.hash = hash
+        self.cipher = cipher
+        self.initUI(label, pw_page)
 
-    def initUI(self, label, pw_page ):
+     def initUI(self, label, pw_page ):
         self.setWindowTitle("Password Profile")
         self.resize(900, 600)
         
@@ -21,40 +25,35 @@ class PasswordProfile( QWidget ):
         layout = QVBoxLayout()
         labels = [ "Website", "Username", "Password", "Notes", "Last Updated" ]
         c = 0
-        for item in label[:-1]: #get all but the last one (as need to format it)
-            label_top = QLabel( f"{labels[ c ]}" )
-            # label_top.setStyleSheet("""
-            # QLabel {
-            #     background-color: qradialgradient (
-            #         stop:0 #FF6F4A,
-            #         stop:1 #E14A1C
-            #     );
-            #     border-style: outset;
-            #     border-width: 1px;
-            #     border-radius: 5px;
-            #     border-color: #043b00;
-            #     font-family: Arial;
-            #     font-size: 24px;
-            # }
-            #  """)
-            c = c + 1  #counter for Labels
-            label_top.setObjectName("label_top")
-            layout.addWidget( label_top )
-            label_widget = QLabel(f"{item}")
-            # label_widget.setStyleSheet("""
-            # QLabel {
-            #     background-color: #FF5733;
-            #     border-style: outset;
-            #     border-width: 1px;
-            #     border-radius: 5px;
-            #     border-color: #043b00;
-            #     font-family: Arial;
-            #     font-size: 20px;
-            # }
-            #  """)
-            label_widget.setTextInteractionFlags( Qt.TextSelectableByMouse ) #set selectable flag
-            label_widget.setObjectName("label_widget")
-            layout.addWidget(label_widget)
+        for item in label[:-2]: #get all but the last one (as need to format it)
+            if c == 2:
+                #password so is special
+                label_top = QLabel( f"{labels[ c ]}" )
+                c = c + 1  #counter for Labels
+                layout.addWidget( label_top )
+                label_widget = QLabel(f"{item}")    #todo: decrypt
+                label_widget.setTextInteractionFlags( Qt.TextSelectableByMouse ) #set selectable flag
+                layout.addWidget(label_widget)
+                self.strength_label = QLabel( "Password strength: Weak" )
+                if p_strength( item ) == 0:
+                    #weak
+                    self.strength_label.setStyleSheet("color: red;")
+                elif p_strength( item ) == 1:
+                    self.strength_label.setText("Password strength: Medium")
+                    self.strength_label.setStyleSheet("color: orange;")
+                else:
+                    #strong
+                    self.strength_label.setText("Password strength: Strong")
+                    self.strength_label.setStyleSheet("color: green;")
+                self.strength_label.setFont(QFont("Arial", 14))
+                layout.addWidget( self.strength_label )
+            else:
+                label_top = QLabel( f"{labels[ c ]}" )
+                c = c + 1  #counter for Labels
+                layout.addWidget( label_top )
+                label_widget = QLabel(f"{item}")
+                label_widget.setTextInteractionFlags( Qt.TextSelectableByMouse ) #set selectable flag
+                layout.addWidget(label_widget)
         #Fix time
         label_top = QLabel( f"{labels[ c ]}" )
         # label_top.setStyleSheet("""
@@ -95,26 +94,37 @@ class PasswordProfile( QWidget ):
         #Pull up password profile screen
         self.edit_password_window.setWindowTitle( "Edit Password Profile" ) #set window title
         self.edit_password_window.resize( 900, 600 ) #standard size
-        widg = EditPasswordProfile.EditPasswordProfile( self.edit_password_window, pw_page, label, self ) #create widget to create a new password profile
+        widg = EditPasswordProfile.EditPasswordProfile( self.edit_password_window, pw_page, label, self, self.hash, self.cipher ) #create widget to create a new password profile
         layout = QVBoxLayout() #create layout for this widget
         layout.addWidget( widg ) #add the password profile class oto the layout
         self.edit_password_window.setLayout( layout ) #set the layout to this widget
         self.edit_password_window.show() #show this window
 class SearchableButtonList(QWidget):
-    def __init__(self):
+     def __init__(self, hash, cipher):
         super().__init__()
+        self.hash = hash
+        self.cipher = cipher
+        self.order = 3 #set default order
         self.initUI()
 
-    def initUI(self):
+     def initUI(self):
         # Layout setup
         self.main_layout = QVBoxLayout(self)
         
         # Search bar setup
+        search_pw_layout = QHBoxLayout() #search bar then options
         self.search_bar = QLineEdit(self)
         self.search_bar.setPlaceholderText("Search...")
         self.search_bar.textChanged.connect(self.filter_buttons)
         self.search_bar.setFont(QFont("Arial", 16))  # Set font size to 16
-        self.main_layout.addWidget(self.search_bar)
+        search_pw_layout.addWidget( self.search_bar ) #add to top bar
+        #options button
+        self.options = QPushButton( "Options", self )
+        self.options.setVisible( True ) #display
+        self.options.setFont(QFont("Arial", 16))  # Set font size to 16
+        self.options.clicked.connect(lambda: self.create_options())  # Connect click event add password
+        search_pw_layout.addWidget( self.options )
+        self.main_layout.addLayout( search_pw_layout )
         
         # Scrollable area setup
         self.scroll_area = QScrollArea(self)
@@ -131,7 +141,6 @@ class SearchableButtonList(QWidget):
         self.add_pw.clicked.connect(lambda: self.add_password())  # Connect click event add password
         add_pw_layout.addWidget( self.add_pw ) #add button to right side of horz layout
         self.main_layout.addLayout( add_pw_layout ) #add button to bottom of vertical layout
-        
 
     def filter_buttons(self):
         search_text = self.search_bar.text().lower()
@@ -141,18 +150,36 @@ class SearchableButtonList(QWidget):
         #label is all of the information
         #Labels look like: weburl, username, password, notes, timestamp
         # Open a new window with the password profile
-        self.button_window = PasswordProfile(label, self ) #pass in this window as suber object so it can be refreshed upon editing
+        self.button_window = PasswordProfile(label, self, self.hash, self.cipher) #pass in this window as suber object so it can be refreshed upon editing
     def add_password( self ):
         self.add_password_window = QWidget()
         #Pull up password profile screen
         self.add_password_window.setWindowTitle( "Create Password Profile" ) #set window title
         self.add_password_window.resize( 900, 600 ) #standard size
-        widg = AddPasswordProfile.AddPasswordProfile( self.add_password_window, self ) #create widget to create a new password profile
+        widg = AddPasswordProfile.AddPasswordProfile( self.add_password_window, self, self.hash, self.cipher ) #create widget to create a new password profile
         layout = QVBoxLayout() #create layout for this widget
         layout.addWidget( widg ) #add the password profile class oto the layout
         self.add_password_window.setLayout( layout ) #set the layout to this widget
         self.add_password_window.show() #show this window
+    def create_options( self ):
+        #Options window
+        #Pull up password profile screen
+        options_dialog = OptionsWindow.OptionsWindow()
+        #self.options_window.show()
+        result = options_dialog.exec_()  # Open the dialog modally
+
+        if result == QDialog.Accepted:
+            if options_dialog.get_selected_option() == "Alphabetical":
+                self.order = 1
+            elif options_dialog.get_selected_option() == "Reverse Alphabetical":
+                self.order = 2
+            elif options_dialog.get_selected_option() == "Last Changed":
+                self.order = 3
+            else:
+                self.order = 4
+        self.refresh() #reset order for new update
     def refresh( self ):
+        #order: 1 = alphabetical, 2 = reverse alphabetical, 3 = newest, 4 = oldest
         #refresh data
         scroll_content = QWidget()
         self.scroll_layout = QVBoxLayout(scroll_content)
@@ -174,11 +201,27 @@ class SearchableButtonList(QWidget):
         with open( 'passwords.csv', 'r' ) as file:
             reader = csv.reader( file )
             data = list( reader )
-        data.sort( key=lambda x: x[-1], reverse=True ) #sort by timestamp
-        for label in data: #Labels look like: weburl, username, password, notes, timestamp
-            button = QPushButton(label[ 0 ], self)
-            button.setVisible(True) #make them display in the scroll area 
-            button.clicked.connect(lambda checked, l=label: self.button_clicked(l))  # Connect click event
-            button.setFont(QFont("Arial", 16))  # Set font size to 16
-            self.buttons.append(button)
-            self.scroll_layout.addWidget(button)
+        if (len(data) > 0):
+            if (len(data[0]) > 0): # Don't sort if list is empty
+                if self.order == 1:
+                    #order alphabetical
+                    data.sort( key=lambda x: x[0], reverse=False ) #sort by timestamp
+                elif self.order == 2:
+                    #reverse alphabetical
+                    data.sort( key=lambda x: x[0], reverse=True ) #sort by timestamp
+                elif self.order == 3:
+                    #newest
+                    data.sort( key=lambda x: x[-2], reverse=True ) #sort by timestamp
+                else:
+                    #oldest
+                    data.sort( key=lambda x: x[-2], reverse=False ) #sort by timestamp
+
+        for label in data: #Labels look like: weburl, username, password, notes, timestamp, nonce
+            if len(label) > 0:
+                button = QPushButton(label[ 0 ], self)
+                button.setVisible(True) #make them display in the scroll area 
+                label[2] = self.cipher.decrypt(label[2], label[5], label[1].encode('utf-8'))
+                button.clicked.connect(lambda checked, l=label: self.button_clicked(l))  # Connect click event
+                button.setFont(QFont("Arial", 16))  # Set font size to 16
+                self.buttons.append(button)
+                self.scroll_layout.addWidget(button)

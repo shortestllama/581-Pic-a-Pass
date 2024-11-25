@@ -7,13 +7,13 @@ from PyQt5.QtGui import QFont
 from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QFormLayout, QLineEdit, QPushButton, QMessageBox, QLabel
 from password_strength import p_strength #password strength function
 class AddPasswordProfile(QWidget):
-     def __init__(self, super_window, super_object, hash, cipher):
+    def __init__(self, super_window, super_object, hash, cipher):
         super().__init__()
         self.hash = hash
         self.cipher = cipher
         self.initUI( super_window, super_object )
 
-     def initUI( self, super_window, super_object ):
+    def initUI( self, super_window, super_object ):
         # Set up the form layout
         layout = QVBoxLayout()
         form_layout = QFormLayout()

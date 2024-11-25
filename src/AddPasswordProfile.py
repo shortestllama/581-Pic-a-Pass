@@ -13,7 +13,7 @@ class AddPasswordProfile(QWidget):
         self.cipher = cipher
         self.initUI( super_window, super_object )
 
-    def initUI( self, super_window, super_object ):
+     def initUI( self, super_window, super_object ):
         # Set up the form layout
         layout = QVBoxLayout()
         form_layout = QFormLayout()

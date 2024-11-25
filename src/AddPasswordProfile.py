@@ -2,12 +2,15 @@ import sys
 import csv
 import time
 from generatepassword import PasswordGenerator
+from cryptoutils import PasswordCipher
 from PyQt5.QtGui import QFont
 from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QFormLayout, QLineEdit, QPushButton, QMessageBox, QLabel
 from password_strength import p_strength #password strength function
 class AddPasswordProfile(QWidget):
-    def __init__(self, super_window, super_object ):
+     def __init__(self, super_window, super_object, hash, cipher):
         super().__init__()
+        self.hash = hash
+        self.cipher = cipher
         self.initUI( super_window, super_object )
 
     def initUI( self, super_window, super_object ):
@@ -49,12 +52,15 @@ class AddPasswordProfile(QWidget):
 
     def save_to_csv(self):
         # Get values from input fields
+        auth_data = self.input2.text().encode('utf-8')
+        ciphertext, nonce = self.cipher.encrypt(self.input3.text(), auth_data)
         data = [
             self.input1.text(),
             self.input2.text(),
-            self.input3.text(),
+            ciphertext.decode('utf-8'),
             self.input4.text(),
-            time.time()
+            time.time(),
+            nonce.decode('utf-8')
         ]
         
         # Open file dialog to choose where to save the CSV

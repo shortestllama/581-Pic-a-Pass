@@ -10,9 +10,11 @@ import csv #for reading from csv and creating buttons
 import OptionsWindow
 from password_strength import p_strength #password strength function
 class PasswordProfile( QWidget ):
-    def __init__(self, label, pw_page):
+     def __init__(self, label, pw_page, hash, cipher):
         super().__init__()
-        self.initUI(label, pw_page )
+        self.hash = hash
+        self.cipher = cipher
+        self.initUI(label, pw_page)
 
     def initUI(self, label, pw_page ):
         self.setWindowTitle("Password Profile")
@@ -22,7 +24,7 @@ class PasswordProfile( QWidget ):
         layout = QVBoxLayout()
         labels = [ "Website", "Username", "Password", "Notes", "Last Updated" ]
         c = 0
-        for item in label[:-1]: #get all but the last one (as need to format it)
+        for item in label[:-2]: #get all but the last one (as need to format it)
             if c == 2:
                 #password so is special
                 label_top = QLabel( f"{labels[ c ]}" )
@@ -119,14 +121,16 @@ class PasswordProfile( QWidget ):
         #Pull up password profile screen
         self.edit_password_window.setWindowTitle( "Edit Password Profile" ) #set window title
         self.edit_password_window.resize( 900, 600 ) #standard size
-        widg = EditPasswordProfile.EditPasswordProfile( self.edit_password_window, pw_page, label, self ) #create widget to create a new password profile
+        widg = EditPasswordProfile.EditPasswordProfile( self.edit_password_window, pw_page, label, self, self.hash, self.cipher ) #create widget to create a new password profile
         layout = QVBoxLayout() #create layout for this widget
         layout.addWidget( widg ) #add the password profile class oto the layout
         self.edit_password_window.setLayout( layout ) #set the layout to this widget
         self.edit_password_window.show() #show this window
 class SearchableButtonList(QWidget):
-    def __init__(self):
+     def __init__(self, label, hash, cipher):
         super().__init__()
+        self.hash = hash
+        self.cipher = cipher
         self.order = 3 #set default order
         self.initUI()
 
@@ -173,13 +177,13 @@ class SearchableButtonList(QWidget):
         #label is all of the information
         #Labels look like: weburl, username, password, notes, timestamp
         # Open a new window with the password profile
-        self.button_window = PasswordProfile(label, self ) #pass in this window as suber object so it can be refreshed upon editing
+        self.button_window = PasswordProfile(label, self, self.hash, self.cipher) #pass in this window as suber object so it can be refreshed upon editing
     def add_password( self ):
         self.add_password_window = QWidget()
         #Pull up password profile screen
         self.add_password_window.setWindowTitle( "Create Password Profile" ) #set window title
         self.add_password_window.resize( 900, 600 ) #standard size
-        widg = AddPasswordProfile.AddPasswordProfile( self.add_password_window, self ) #create widget to create a new password profile
+        widg = AddPasswordProfile.AddPasswordProfile( self.add_password_window, self, self.hash, self.cipher ) #create widget to create a new password profile
         layout = QVBoxLayout() #create layout for this widget
         layout.addWidget( widg ) #add the password profile class oto the layout
         self.add_password_window.setLayout( layout ) #set the layout to this widget
@@ -236,9 +240,10 @@ class SearchableButtonList(QWidget):
         else:
             #oldest
             data.sort( key=lambda x: x[-1], reverse=False ) #sort by timestamp
-        for label in data: #Labels look like: weburl, username, password, notes, timestamp
+        for label in data: #Labels look like: weburl, username, password, notes, timestamp, nonce
             button = QPushButton(label[ 0 ], self)
             button.setVisible(True) #make them display in the scroll area 
+            label[2] = self.cipher.decrypt(label[2], label[5], label[1].encode('utf-8'))
             button.clicked.connect(lambda checked, l=label: self.button_clicked(l))  # Connect click event
             button.setFont(QFont("Arial", 16))  # Set font size to 16
             self.buttons.append(button)

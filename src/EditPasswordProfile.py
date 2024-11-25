@@ -6,8 +6,10 @@ from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QFormLayout, QLi
 from PyQt5.QtGui import QFont
 from password_strength import p_strength #password strength function
 class EditPasswordProfile(QWidget):
-    def __init__(self, super_window, super_object, label, password_profile_window ):
+    def __init__(self, super_window, super_object, label, password_profile_window, hash, cipher):
         super().__init__()
+        self.hash = hash
+        self.cipher = cipher
         self.initUI( super_window, super_object, label, password_profile_window )
 
     def initUI( self, super_window, super_object, label, password_profile_window ):
@@ -64,7 +66,10 @@ class EditPasswordProfile(QWidget):
             }
              """)
         self.layout.addWidget( self.label_pw )
-        self.label_pwReal = QLineEdit( label[ 2 ] ) #set label as user name
+        password = label[ 2 ]
+        nonce = label[ 5 ]
+        auth_data = label[ 1 ].encode('utf-8') # Use the username of the password as the authentication data
+        self.label_pwReal = QLineEdit( password ) # Set label as password
         self.label_pwReal.setStyleSheet("""
             QLineEdit {
                 font-family: Arial;
@@ -118,13 +123,17 @@ class EditPasswordProfile(QWidget):
 
     def save_to_csv(self):
         # Get values from input fields
+        auth_data = self.label_unameReal.text().encode('utf-8')
+        ciphertext, nonce = self.cipher.encrypt(self.label_pwReal.text(), auth_data)
         data = [
             self.label_websiteReal.text(),
             self.label_unameReal.text(),
-            self.label_pwReal.text(),
+            ciphertext.decode('utf-8'),
             self.label_noteReal.text(),
-            time.time()
+            time.time(),
+            nonce.decode('utf-8')
         ]
+
         
         # Open file dialog to choose where to save the CSV
         file_path = "passwords.csv"

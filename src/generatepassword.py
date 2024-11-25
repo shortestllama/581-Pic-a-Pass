@@ -1,6 +1,6 @@
 import secrets 
 import string
-from password_strength import SPECIAL_CHARS, calculate_entropy
+from password_strength import SPECIAL_CHARS, p_strength 
 
 class PasswordGenerator:
     def __init__(self, length=18, use_upper=True, use_lower=True, use_digits=True, use_specials=True):
@@ -76,5 +76,5 @@ class PasswordGenerator:
                 special_count = sum(c in SPECIAL_CHARS for c in password)
                 meets_requirements &= special_count >= self.MIN_SPECIAL
                 
-            if meets_requirements and calculate_entropy(password) >= self.MIN_ENTROPY:
+            if meets_requirements and p_strength(password) >= self.MIN_ENTROPY:
                 return password

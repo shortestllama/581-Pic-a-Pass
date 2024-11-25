@@ -4,6 +4,8 @@ from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 from cryptography.hazmat.primitives.ciphers.aead import AESGCM
 from cryptography.hazmat.primitives.kdf import KeyDerivationFunction
 from pathlib import Path
+from typing import Tuple
+import base64
 import bcrypt
 import os
 
@@ -132,12 +134,14 @@ class PasswordCipher:
     # ct: The plaintext to encrypt
     # aad: The authentication data. Use a byte encoded string of data relevant to the password. (e.g. aad=b"gmail.com")
     # @ret: The encrypted password
-    def encrypt(self, pt: str, aad: bytes = b"") -> bytes:
+    def encrypt(self, pt: str, aad: bytes = b"") -> Tuple[bytes, bytes]:
         if (self.key is None):
             raise EmptyKeyError("No key for encryption")
         aesgcm = AESGCM(self.key)
         nonce = os.urandom(12)
-        ct = aesgcm.encrypt(nonce, pt.encode('utf-8'), aad)
+        ct = base64.b64encode(aesgcm.encrypt(nonce, pt.encode('utf-8'), aad))
+        # aesgcm.decrypt(nonce, base64.b64decode(ct), )
+        nonce = base64.b64encode(nonce)
         return ct, nonce
     
     # Decrypt the given ciphertext using the generated symmetric key, given nonce, and authentication data
@@ -150,7 +154,7 @@ class PasswordCipher:
             raise EmptyKeyError("No key for decryption")
         aesgcm = AESGCM(self.key)
         try:
-            pt = aesgcm.decrypt(nonce, ct, aad)
+            pt = aesgcm.decrypt(base64.b64decode(nonce), base64.b64decode(ct), aad)
         except Exception as e:
             return f"Decryption failed: {e}"
         return pt.decode('utf-8')
@@ -162,20 +166,3 @@ class PasswordCipher:
 
         with open(self.PATH, "wb") as f:
             f.write(self.salt + b'\n')
-
-## Used to test crypto functions 
-# def main():
-#     password = "turkey"
-#     h = PasswordHash()
-#     h.gen_hash(password)
-#     c = PasswordCipher()
-#     if h.check_pwd(password):
-#         c.gen_key(password)
-#
-#     pwd = "I love turtles"
-#     data = b"account:gmail.com"
-#     ct, nonce = c.encrypt(pwd, data)
-#     pt = c.decrypt(ct, nonce, data)
-#     print(pt)
-#
-#main()

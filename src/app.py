@@ -2,6 +2,8 @@ from Breach import create_breach_page
 import sys
 import csv
 from PyQt5.QtWidgets import QMainWindow, QWidget
+from PyQt5.QtGui import QPixmap
+from PyQt5.QtCore import Qt
 import TabWidget #from file in directory
 import SplashScreen
 import SearchableButtonList
@@ -29,6 +31,7 @@ def create_pw_page( self ):
 class LoginScreen(QWidget):
     def __init__(self, next_window):
         super().__init__()
+        self.setObjectName("login_screen")
         self.initUI(next_window)
 
     def initUI(self, next_window):
@@ -37,8 +40,19 @@ class LoginScreen(QWidget):
         # Set up layout
         layout = QVBoxLayout()
 
+        # Set up picture
+        self.pic = QLabel("")
+        self.pic.setAlignment(Qt.AlignCenter)
+        pixmap = QPixmap("gear.png")
+        scaled_pixmap = pixmap.scaled(
+            150, 150, Qt.KeepAspectRatio, Qt.SmoothTransformation
+        )
+        self.pic.setPixmap(scaled_pixmap)
+        layout.addWidget(self.pic)
+
         # Title label
         self.label = QLabel('Enter Password')
+        self.label.setAlignment(Qt.AlignCenter)
         layout.addWidget(self.label)
 
         # Password input field
@@ -158,7 +172,7 @@ class MainWindow(QMainWindow):
 
         #Tabs
         self.w = TabWidget.TabWidget()
-        self.w.setStyleSheet( "QTabBar::tab {width: 100px; height: 200px;}" ); #set stylesheet for tab sizes
+        #self.w.setStyleSheet( "QTabBar::tab {width: 100px; height: 200px;}" ); #set stylesheet for tab sizes
         self.w.addTab( self.pw_page, "Passwords") #set the widget of this tab to the password page widget
         self.w.addTab( self.breach_page, "Breaches") #set the widget of this tab to the breach page widget
         self.w.resize(900, 600) #width, height
@@ -181,6 +195,9 @@ def main():
     app = QApplication(sys.argv)
     splash = SplashScreen.SplashScreen()
     splash.show()
+
+    with open("styles.qss", "r") as file:
+            app.setStyleSheet(file.read())
 
     # Simulate loading process
     import time

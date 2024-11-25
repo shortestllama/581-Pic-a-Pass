@@ -10,6 +10,7 @@ import csv #for reading from csv and creating buttons
 class PasswordProfile( QWidget ):
     def __init__(self, label, pw_page):
         super().__init__()
+        self.setObjectName("password_profile")
         self.initUI(label, pw_page )
 
     def initUI(self, label, pw_page ):
@@ -22,46 +23,59 @@ class PasswordProfile( QWidget ):
         c = 0
         for item in label[:-1]: #get all but the last one (as need to format it)
             label_top = QLabel( f"{labels[ c ]}" )
-            label_top.setStyleSheet("""
-            QLabel {
-                font-family: Arial;
-                font-size: 24px;
-            }
-             """)
+            # label_top.setStyleSheet("""
+            # QLabel {
+            #     background-color: qradialgradient (
+            #         stop:0 #FF6F4A,
+            #         stop:1 #E14A1C
+            #     );
+            #     border-style: outset;
+            #     border-width: 1px;
+            #     border-radius: 5px;
+            #     border-color: #043b00;
+            #     font-family: Arial;
+            #     font-size: 24px;
+            # }
+            #  """)
             c = c + 1  #counter for Labels
+            label_top.setObjectName("label_top")
             layout.addWidget( label_top )
             label_widget = QLabel(f"{item}")
-            label_widget.setStyleSheet("""
-            QLabel {
-                font-family: Arial;
-                font-size: 20px;
-                border: 1px solid black;
-                background-color: white;
-            }
-             """)
+            # label_widget.setStyleSheet("""
+            # QLabel {
+            #     background-color: #FF5733;
+            #     border-style: outset;
+            #     border-width: 1px;
+            #     border-radius: 5px;
+            #     border-color: #043b00;
+            #     font-family: Arial;
+            #     font-size: 20px;
+            # }
+            #  """)
             label_widget.setTextInteractionFlags( Qt.TextSelectableByMouse ) #set selectable flag
+            label_widget.setObjectName("label_widget")
             layout.addWidget(label_widget)
         #Fix time
         label_top = QLabel( f"{labels[ c ]}" )
-        label_top.setStyleSheet("""
-        QLabel {
-            font-family: Arial;
-            font-size: 24px;
-        }
-         """)
+        # label_top.setStyleSheet("""
+        # QLabel {
+        #     font-family: Arial;
+        #     font-size: 24px;
+        # }
+        #  """)
         layout.addWidget( label_top )
         utc_time = datetime.fromtimestamp( float( label[ 4 ] ), tz=timezone.utc) #fix time
         central_tz = pytz.timezone('America/Chicago') #convert to central time (Best time)
         central_now = utc_time.astimezone(central_tz)
         label_widget = QLabel(f"{central_now.strftime("%m-%d-%Y %H:%M")}")
-        label_widget.setStyleSheet("""
-        QLabel {
-            font-family: Arial;
-            font-size: 20px;
-            border: 1px solid black;
-            background-color: white;
-        }
-         """)
+        # label_widget.setStyleSheet("""
+        # QLabel {
+        #     font-family: Arial;
+        #     font-size: 20px;
+        #     border: 1px solid black;
+        #     background-color: white;
+        # }
+        #  """)
         label_widget.setTextInteractionFlags( Qt.TextSelectableByMouse ) #set selectable flag
         layout.addWidget(label_widget)
         #Add "Edit Password Profile" button to the bottom
@@ -143,17 +157,17 @@ class SearchableButtonList(QWidget):
         scroll_content = QWidget()
         self.scroll_layout = QVBoxLayout(scroll_content)
         self.scroll_area.setWidget(scroll_content)
-        self.scroll_area.setStyleSheet("""
-            QScrollArea {
-                border: 2px solid black;
-                border-radius: 10px; /* Adjust the radius as needed */
+        # self.scroll_area.setStyleSheet("""
+        #     QScrollArea {
+        #         border: 2px solid black;
+        #         border-radius: 10px; /* Adjust the radius as needed */
                 
-            }
-            QScrollArea > QWidget > QWidget {
-                background: White; /* Set the background color of the content area */
-                border-radius: 10px;
-            }
-        """)
+        #     }
+        #     QScrollArea > QWidget > QWidget {
+        #         background: White; /* Set the background color of the content area */
+        #         border-radius: 10px;
+        #     }
+        # """)
         
         # Create buttons
         self.buttons = []

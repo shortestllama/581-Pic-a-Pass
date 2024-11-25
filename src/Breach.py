@@ -57,6 +57,7 @@ def create_breach_page(main_window) -> QWidget:
     # Initialize the api checker and the ui
     checker = APIChecker()
     breach_page = QWidget(main_window)
+    breach_page.setObjectName("breach")
     layout = QFormLayout()
     breach_page.setLayout(layout)
     # Open the password file

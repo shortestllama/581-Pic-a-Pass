@@ -5,6 +5,7 @@ class TabBar(QtWidgets.QTabBar):
         s.transpose()
         return s
 
+    #how do we change the colors of the tabs?
     def paintEvent(self, event):
         painter = QtWidgets.QStylePainter(self)
         opt = QtWidgets.QStyleOptionTab()

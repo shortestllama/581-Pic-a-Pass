@@ -18,4 +18,4 @@
 # Ignore mac
 **/.DS_STORE
 
-**/*hashed_password*
+**/*.pap

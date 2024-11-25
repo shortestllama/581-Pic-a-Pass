@@ -2,7 +2,9 @@ import sys
 import csv
 import time
 from generatepassword import PasswordGenerator
-from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QFormLayout, QLineEdit, QPushButton, QMessageBox
+from PyQt5.QtGui import QFont
+from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QFormLayout, QLineEdit, QPushButton, QMessageBox, QLabel
+from password_strength import p_strength #password strength function
 class AddPasswordProfile(QWidget):
     def __init__(self, super_window, super_object ):
         super().__init__()
@@ -23,6 +25,11 @@ class AddPasswordProfile(QWidget):
         form_layout.addRow("Web URL:", self.input1)
         form_layout.addRow("Username:", self.input2)
         form_layout.addRow("Password:", self.input3)
+        #show password strength
+        self.strength_label = QLabel( "Password strength: Waiting..." )
+        self.strength_label.setFont(QFont("Arial", 14))
+        form_layout.addWidget( self.strength_label )
+        self.input3.textChanged.connect(self.check_password_strength)
         form_layout.addRow("Notes:", self.input4)
         #timetamp is automatic
         layout.addLayout(form_layout)
@@ -71,3 +78,18 @@ class AddPasswordProfile(QWidget):
     def generate_pw( self ):
         pw = PasswordGenerator()
         self.input3.setText( pw.generate_password() )
+    def check_password_strength( self ):
+        if self.input3.text() == "":
+            #do nothing, prevents crashing
+            a = 1
+        elif p_strength( self.input3.text() ) == 0:
+            #weak
+            self.strength_label.setText("Password strength: Weak")
+            self.strength_label.setStyleSheet("color: red;")
+        elif p_strength( self.input3.text() ) == 1:
+            self.strength_label.setText("Password strength: Medium")
+            self.strength_label.setStyleSheet("color: orange;")
+        else:
+            #strong
+            self.strength_label.setText("Password strength: Strong")
+            self.strength_label.setStyleSheet("color: green;")

@@ -10,14 +10,14 @@ import csv #for reading from csv and creating buttons
 import OptionsWindow
 from password_strength import p_strength #password strength function
 class PasswordProfile( QWidget ):
-     def __init__(self, label, pw_page, hash, cipher):
+    def __init__(self, label, pw_page, hash, cipher):
         super().__init__()
         self.setObjectName("password_profile")
         self.hash = hash
         self.cipher = cipher
         self.initUI(label, pw_page)
 
-     def initUI(self, label, pw_page ):
+    def initUI(self, label, pw_page ):
         self.setWindowTitle("Password Profile")
         self.resize(900, 600)
         
@@ -100,14 +100,14 @@ class PasswordProfile( QWidget ):
         self.edit_password_window.setLayout( layout ) #set the layout to this widget
         self.edit_password_window.show() #show this window
 class SearchableButtonList(QWidget):
-     def __init__(self, hash, cipher):
+    def __init__(self, hash, cipher):
         super().__init__()
         self.hash = hash
         self.cipher = cipher
         self.order = 3 #set default order
         self.initUI()
 
-     def initUI(self):
+    def initUI(self):
         # Layout setup
         self.main_layout = QVBoxLayout(self)
         

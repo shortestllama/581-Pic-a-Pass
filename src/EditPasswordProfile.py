@@ -139,8 +139,10 @@ class EditPasswordProfile(QWidget):
             # Iterate over each row in the CSV
             for row in reader:
                 # If the value in the specified column does not match, keep the line
-                if row[ 0 ] != self.label_websiteReal.text():
-                    lines_to_keep.append(row)
+                if len(row) > 0:
+                    if row[ 0 ] != self.label_websiteReal.text():
+                        lines_to_keep.append(row)
+
         lines_to_keep.append( data ) #save new info
         # Write the lines back to the CSV file
         with open(file_path, mode='w', newline='') as csv_file:

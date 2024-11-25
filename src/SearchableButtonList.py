@@ -16,7 +16,7 @@ class PasswordProfile( QWidget ):
         self.cipher = cipher
         self.initUI(label, pw_page)
 
-    def initUI(self, label, pw_page ):
+     def initUI(self, label, pw_page ):
         self.setWindowTitle("Password Profile")
         self.resize(900, 600)
         
@@ -134,7 +134,7 @@ class SearchableButtonList(QWidget):
         self.order = 3 #set default order
         self.initUI()
 
-    def initUI(self):
+     def initUI(self):
         # Layout setup
         self.main_layout = QVBoxLayout(self)
         

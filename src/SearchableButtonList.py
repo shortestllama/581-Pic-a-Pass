@@ -241,3 +241,4 @@ class SearchableButtonList(QWidget):
                 button.setFont(QFont("Arial", 16))  # Set font size to 16
                 self.buttons.append(button)
                 self.scroll_layout.addWidget(button)
+        self.filter_buttons() #also filter the buttons

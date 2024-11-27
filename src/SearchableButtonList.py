@@ -31,8 +31,16 @@ class PasswordProfile( QWidget ):
                 label_top = QLabel( f"{labels[ c ]}" )
                 c = c + 1  #counter for Labels
                 layout.addWidget( label_top )
-                label_widget = QLabel(f"{item}")    #todo: decrypt
+                label_widget = QLabel(f"{item}") #already decrypted from loading it in
                 label_widget.setTextInteractionFlags( Qt.TextSelectableByMouse ) #set selectable flag
+                #special labels so have a different style
+                label_widget.setStyleSheet("""
+                     QLabel {
+                        background-color: white;
+                        color: black;
+                        font-size: 24px;
+                     }
+                       """)
                 layout.addWidget(label_widget)
                 self.strength_label = QLabel( "Password strength: Weak" )
                 if p_strength( item ) == 0:
@@ -53,6 +61,14 @@ class PasswordProfile( QWidget ):
                 layout.addWidget( label_top )
                 label_widget = QLabel(f"{item}")
                 label_widget.setTextInteractionFlags( Qt.TextSelectableByMouse ) #set selectable flag
+                #special labels so have a different style
+                label_widget.setStyleSheet("""
+                     QLabel {
+                        background-color: white;
+                        color: black;
+                        font-size: 24px;
+                     }
+                       """)
                 layout.addWidget(label_widget)
         #Fix time
         label_top = QLabel( f"{labels[ c ]}" )
@@ -67,14 +83,14 @@ class PasswordProfile( QWidget ):
         central_tz = pytz.timezone('America/Chicago') #convert to central time (Best time)
         central_now = utc_time.astimezone(central_tz)
         label_widget = QLabel(f"{central_now.strftime("%m-%d-%Y %H:%M")}")
-        # label_widget.setStyleSheet("""
-        # QLabel {
-        #     font-family: Arial;
-        #     font-size: 20px;
-        #     border: 1px solid black;
-        #     background-color: white;
-        # }
-        #  """)
+        #special labels so have a different style
+        label_widget.setStyleSheet("""
+             QLabel {
+                background-color: white;
+                color: black;
+                font-size: 24px;
+             }
+               """)
         label_widget.setTextInteractionFlags( Qt.TextSelectableByMouse ) #set selectable flag
         layout.addWidget(label_widget)
         #Add "Edit Password Profile" button to the bottom

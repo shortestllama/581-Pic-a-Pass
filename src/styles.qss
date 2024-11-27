@@ -65,6 +65,7 @@ QMainWindow {
 QLineEdit {
 	background-color: white;
 	color: black;
+	font-size: 24px;
 }
 
 /* purple gradient */
@@ -87,7 +88,7 @@ QPushButton {
 	border-radius: 5px;
 	border-color: #043b00;
 	padding: 5px;
-	font-size: 14px;
+	font-size: 24px;
 }
 
 QPushButton:hover {
@@ -96,7 +97,7 @@ QPushButton:hover {
 
 QLabel {
 	font-family: 'Arial';
-	font-size: 16px;
+	font-size: 24px;
 	color: #333;
 }
 

@@ -10,9 +10,10 @@ class EditPasswordProfile(QWidget):
         super().__init__()
         self.hash = hash
         self.cipher = cipher
-        self.initUI( super_window, super_object, label, password_profile_window )
+        self.super_object = super_object
+        self.initUI( super_window, label, password_profile_window )
 
-    def initUI( self, super_window, super_object, label, password_profile_window ):
+    def initUI( self, super_window, label, password_profile_window ):
         self.setWindowTitle("Edit Password Profile")
         self.resize(900, 600)
         
@@ -102,11 +103,11 @@ class EditPasswordProfile(QWidget):
         generate_button.clicked.connect( self.generate_pw )
         self.layout.addWidget( generate_button )
         # Save button
-        save_button = QPushButton("Save to CSV")
+        save_button = QPushButton("Save")
         save_button.clicked.connect(self.save_to_csv)
         save_button.clicked.connect( super_window.close )
         #refresh the main page
-        save_button.clicked.connect( super_object.refresh )
+        save_button.clicked.connect( self.super_object.refresh )
         save_button.clicked.connect( password_profile_window.close ) #close password profile menu to get back to list
         self.layout.addWidget(save_button)
         
@@ -148,6 +149,7 @@ class EditPasswordProfile(QWidget):
         with open(file_path, mode='w', newline='') as csv_file:
             writer = csv.writer(csv_file)
             writer.writerows(lines_to_keep)
+        self.super_object.refresh() #refresh main page
     def generate_pw( self ):
         pw = PasswordGenerator()
         self.label_pwReal.setText( pw.generate_password() )

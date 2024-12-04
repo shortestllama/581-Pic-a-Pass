@@ -158,7 +158,6 @@ class PasswordCipher:
     def __write_data(self) -> None:
         if (self.salt is None):
             raise EmptySaltError ("No salt has been generated")
-        print(self.salt)
         encode_image(self.TMP_IMG, base64.b64encode(self.salt), self.PATH)
 
     def __read_data(self) -> None:
@@ -167,7 +166,6 @@ class PasswordCipher:
             raise FileNotExistsError ("Key file has not been generated")
 
         self.salt = base64.b64decode(decode_image(self.PATH))
-        print(self.salt)
 
 '''Steganography functions'''
 

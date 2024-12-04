@@ -4,7 +4,7 @@ import sys
 import csv
 from PyQt5.QtWidgets import QMainWindow, QWidget, QShortcut
 from PyQt5.QtGui import QPixmap, QKeySequence
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, QEvent
 import TabWidget #from file in directory
 import SplashScreen
 import SearchableButtonList
@@ -19,29 +19,27 @@ from PyQt5.QtWidgets import (
     QGridLayout,
     QPushButton,
     QScrollArea,
-    QFrame
+    QFrame,
+    QDialog
 )
 
-# Set up hash and cipher
-hash = PasswordHash()
-cipher = PasswordCipher()
+#def create_pw_page( self ):
+#    #read CSV file
+#    with open( 'passwords.csv', 'r' ) as file:
+#        reader = csv.reader( file )
+#        data = list( reader )
+#    return SearchableButtonList.SearchableButtonList( data )
 
-def create_pw_page( self ):
-    #read CSV file
-    with open( 'passwords.csv', 'r' ) as file:
-        reader = csv.reader( file )
-        data = list( reader )
-    return SearchableButtonList.SearchableButtonList( data )
-
-
-class LoginScreen(QWidget):
-    def __init__(self, next_window):
+#USE QDialog as it blocks creation of other windows until it has finished executing
+class LoginScreen(QDialog):
+    def __init__(self, my_hash, my_cipher):
         super().__init__()
         self.setObjectName("login_screen")
-        self.initUI(next_window)
+        self.my_hash = my_hash
+        self.my_cipher = my_cipher
+        self.initUI()
 
-    def initUI(self, next_window):
-        self.next_window = next_window
+    def initUI(self):
 
         # Set up layout
         layout = QVBoxLayout()
@@ -85,25 +83,25 @@ class LoginScreen(QWidget):
 
     def check_password(self):
         password = self.password_input.text()
-        correct = hash.check_pwd(password)
+        correct = self.my_hash.check_pwd(password)
         if correct:
-            cipher.gen_key(password)
+            self.my_cipher.gen_key(password)
             self.label.setText("Login successful")
             self.password_input.clear()
-            self.close()
-            self.next_window.show()
+            self.accept() #close this screen and return true
         else:
             self.label.setText("Password incorrect")
             self.password_input.clear()
-
 # Signup Screen class
-class SignupScreen(QWidget):
-    def __init__(self, next_window):
+#USE QDialog as it blocks creation of other windows until it has finished executing
+class SignupScreen(QDialog):
+    def __init__(self, my_hash, my_cipher):
         super().__init__()
+        self.my_hash = my_hash
+        self.my_cipher = my_cipher
         self.setWindowTitle("Sign Up")
         self.setFixedSize(300, 200)
 
-        self.next_window = next_window
 
         # Layout setup
         layout = QVBoxLayout()
@@ -147,11 +145,10 @@ class SignupScreen(QWidget):
 
         # Hash the password
         try:
-            hash.gen_hash(password)
-            cipher.gen_key(password)
+            self.my_hash.gen_hash(password)
+            self.my_cipher.gen_key(password)
             self.status_label.setText("Sign-up successful!")
-            self.close()  # Close the signup screen
-            self.next_window.show()
+            self.accept() #close this screen and return true
 
         except Exception as e:
             self.status_label.setText("Error saving password: {e}.")
@@ -159,7 +156,7 @@ class SignupScreen(QWidget):
 # Signup Screen class
 # Subclass QMainWindow to customize your application's main window
 class MainWindow(QMainWindow):
-    def __init__(self):
+    def __init__(self, my_hash, my_cipher):
         super().__init__()
         self.setWindowTitle("Pic-A-Pass")
         #create central widget, everything is on this
@@ -206,6 +203,10 @@ class MainWindow(QMainWindow):
             print( "TODO" )
 
 def main():
+    # Set up hash and cipher
+    hash = PasswordHash()
+    cipher = PasswordCipher()
+    
     app = QApplication(sys.argv)
     splash = SplashScreen.SplashScreen()
     splash.show()
@@ -215,10 +216,7 @@ def main():
 
     # Simulate loading process
     import time
-    #time.sleep(3)
-
-    window = MainWindow()
-    window.resize( 900, 600 )
+    time.sleep(3)
 
     # Check if the Hashed Password file exists
     hashedpass_file = Path(hash.PATH)
@@ -228,22 +226,24 @@ def main():
         #INITIALIZE THE LOGINSCREEN OUTSIDE THIS IF STATEMENT
         #IF WE DECIDE LATER TO GO FROM SIGNUP TO LOGIN INSTEAD
         #OF SIGNUP TO MAIN
-        login = LoginScreen(window)
-        login.show()
+        login = LoginScreen( hash, cipher )
         splash.finish(login)
+        if login.exec_() == QDialog.Accepted: #wait for dialog to close
+            window = MainWindow( hash, cipher ) #CREATE main window
+            window.resize( 900, 600 ) #width, height
+            window.show()
     
     # If it is not, ask the user for a password and create the file
     else:    
         
         # Display signup screen
-        signup = SignupScreen(window) #CHANGE THIS TO LOGIN IF WE
+        signup = SignupScreen( hash, cipher ) #CHANGE THIS TO LOGIN IF WE
                                       #MAKE THAT CHANGE
-        signup.show()
         splash.finish(signup)
-    
-    #window = MainWindow()
-    #window.resize( 900, 600 ) #width, height
-    #window.show()
+        if signup.exec_() == QDialog.Accepted: #wait for dialog to close
+            window = MainWindow( hash, cipher ) #CREATE main window
+            window.resize( 900, 600 ) #width, height
+            window.show()
 
     sys.exit(app.exec())
     #app.exec() 

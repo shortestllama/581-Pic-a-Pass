@@ -47,7 +47,7 @@ def find_sequential_chars(password: str, seq_length: int = 3) -> float:
             for i in range(len(sequence) - seq_len + 1):
                 if sequence[i:i+seq_len].lower() in password_lower:
                     # Longer sequences get higher penalties
-                    penalty *= (0.9 ** seq_len)
+                    penalty *= (0.93 ** seq_len)
                     
     return max(0.1, penalty)  # Never reduce entropy by more than 90%  
 
@@ -155,7 +155,6 @@ def check_top_500_passwords(password: str) -> bool:
         "martin",
         "heather",
         "secret",
-        "fucker",
         "merlin",
         "diamond",
         "1234qwer",
@@ -549,6 +548,10 @@ def check_top_500_passwords(password: str) -> bool:
 
 # This function will return a 0, 1, 2 for low, medium, high strength passwords
 def p_strength(password: str) -> int:
+    # Return 0 if the length is 0
+    if len(password) == 0:
+        return 0
+
     # Check if the password is one of the top 500 passwords
     if check_top_500_passwords(password):
         return 0

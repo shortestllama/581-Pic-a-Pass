@@ -5,6 +5,8 @@ from cryptography.hazmat.primitives.ciphers.aead import AESGCM
 from cryptography.hazmat.primitives.kdf import KeyDerivationFunction
 from pathlib import Path
 from typing import Tuple
+from PIL import Image
+import stepic # Used for steg functions
 import base64
 import bcrypt
 import os
@@ -37,8 +39,8 @@ class PasswordHash:
         '''
         self.salt = bcrypt.gensalt()
         self.hash = None
-
-        self.PATH = "hashdat.pap"
+        self.TMP_IMG = "img/.tmp.png"
+        self.PATH = "img/masterpassword.png"
        
     # Generate the master password hash. Writes hash and salt to the datafile
     # pwd: The password to use to generate the hash
@@ -47,7 +49,6 @@ class PasswordHash:
         datafile = Path(self.PATH)
         if datafile.is_file():
             raise FileExistsError ("Hash has already been generated")
-
         # Create the new hash using the new salt
         self.hash = bcrypt.hashpw(pwd.encode('utf-8'), self.salt)
         self.__write_data()
@@ -64,9 +65,8 @@ class PasswordHash:
         if (self.hash is None):
             raise EmptyHashError ("No hash has been generated")
 
-        with open(self.PATH, "wb") as f:
-            f.write(self.salt + b'\n')
-            f.write(self.hash + b'\n')
+        text = self.salt + b'\t' + self.hash
+        encode_image(self.TMP_IMG, text, self.PATH)
 
     # Reads the hash and salt from a file
     def __read_data(self) -> None:
@@ -75,13 +75,8 @@ class PasswordHash:
         if not datafile.is_file():
             raise FileNotExistsError ("Hash file has not been generated")
 
-        with open(self.PATH, "rb") as f:
-            self.salt = f.readline()
-            self.hash = f.readline()
-
-        # Strip the \n from the lines
-        self.salt = self.salt.decode('utf-8').rstrip('\n').encode('utf-8')
-        self.hash = self.hash.decode('utf-8').rstrip('\n').encode('utf-8')
+        data = decode_image(self.PATH).split('\t')
+        self.salt, self.hash = data[0].encode('utf-8'), data[1].encode('utf-8')
 
 '''
 Class used for key generation and password encryption/decryption
@@ -99,7 +94,8 @@ class PasswordCipher:
         self.salt = None
         self.key = None
 
-        self.PATH = "pbkdfdat.pap"
+        self.TMP_IMG = "img/.tmp.png"
+        self.PATH = "img/encryptionkey.png"
         self.ALG = SHA256()
         self.KEYLEN = 32
         self.ITR = 100000
@@ -111,11 +107,11 @@ class PasswordCipher:
         datafile = Path(self.PATH)
         if datafile.is_file():
             # Grab salt from file
-            with open(self.PATH, "rb") as f:
-                self.salt = f.readline()
+            self.__read_data()
         else:
             # Generate new salt
             self.salt = os.urandom(12)
+            self.__write_data()
 
         # Generate KDF
         kdf = PBKDF2HMAC(
@@ -124,7 +120,6 @@ class PasswordCipher:
             salt=self.salt,
             iterations=self.ITR,
         )
-        self.__write_data()
         
         # Generate key from KDF and password
         self.key = kdf.derive(pwd.encode('utf-8'))
@@ -163,6 +158,27 @@ class PasswordCipher:
     def __write_data(self) -> None:
         if (self.salt is None):
             raise EmptySaltError ("No salt has been generated")
+        print(self.salt)
+        encode_image(self.TMP_IMG, base64.b64encode(self.salt), self.PATH)
 
-        with open(self.PATH, "wb") as f:
-            f.write(self.salt + b'\n')
+    def __read_data(self) -> None:
+        datafile = Path(self.PATH)
+        if not datafile.is_file():
+            raise FileNotExistsError ("Key file has not been generated")
+
+        self.salt = base64.b64decode(decode_image(self.PATH))
+        print(self.salt)
+
+'''Steganography functions'''
+
+# Encode text within an image file
+def encode_image(image_path, text: bytes, output_path):
+    image = Image.open(image_path)
+    encoded_image = stepic.encode(image, text)
+    encoded_image.save(output_path)
+
+# Decode given image file
+def decode_image(image_path):
+    image = Image.open(image_path)
+    decoded_text = stepic.decode(image)
+    return decoded_text

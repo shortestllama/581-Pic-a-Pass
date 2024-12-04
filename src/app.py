@@ -2,8 +2,8 @@ from Breach import create_breach_page
 from cryptoutils import PasswordHash, PasswordCipher 
 import sys
 import csv
-from PyQt5.QtWidgets import QMainWindow, QWidget
-from PyQt5.QtGui import QPixmap
+from PyQt5.QtWidgets import QMainWindow, QWidget, QShortcut
+from PyQt5.QtGui import QPixmap, QKeySequence
 from PyQt5.QtCore import Qt
 import TabWidget #from file in directory
 import SplashScreen
@@ -70,6 +70,10 @@ class LoginScreen(QWidget):
         self.submit_button = QPushButton('Submit')
         self.submit_button.clicked.connect(self.check_password)
         layout.addWidget(self.submit_button)
+
+        # Add a shortcut for the Enter key
+        shortcut = QShortcut(QKeySequence("Return"), self)
+        shortcut.activated.connect(self.submit_button.click)
 
         # Set the layout
         self.setLayout(layout)
@@ -166,13 +170,22 @@ class MainWindow(QMainWindow):
        
 
         #password page
-        self.pw_page = SearchableButtonList.SearchableButtonList( hash, cipher )       
+        self.pw_page = SearchableButtonList.SearchableButtonList( hash, cipher )
         
         #breach page
         self.breach_page = create_breach_page(self)
 
         #Tabs
         self.w = TabWidget.TabWidget()
+        self.w.setStyleSheet("""
+            background: qradialgradient(
+                cx:1, cy:0,		 /* Center at top-right */
+                radius:1.5, 	 /* Radius goes outside the radius of the screen */
+                fx:1, fy:0,		 /* Focal point at top-right */
+                stop:0 #003087, /* #4169E1, /* #FFEB73, /* #3E8EBD, /* #66ff66, */
+                stop:1 #001F5A /* #1E3A8A /* #CDA200 /* #1D567B /* #043b00 */	 /* Darker than we actually see because radius is larger than we see */
+            );
+        """)
         #self.w.setStyleSheet( "QTabBar::tab {width: 100px; height: 200px;}" ); #set stylesheet for tab sizes
         self.w.addTab( self.pw_page, "Passwords") #set the widget of this tab to the password page widget
         self.w.addTab( self.breach_page, "Breaches") #set the widget of this tab to the breach page widget
@@ -202,7 +215,7 @@ def main():
 
     # Simulate loading process
     import time
-    time.sleep(3)
+    #time.sleep(3)
 
     window = MainWindow()
     window.resize( 900, 600 )

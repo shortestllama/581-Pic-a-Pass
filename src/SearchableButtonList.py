@@ -12,7 +12,6 @@ from password_strength import p_strength #password strength function
 class PasswordProfile( QWidget ):
     def __init__(self, label, pw_page, hash, cipher):
         super().__init__()
-        self.setObjectName("password_profile")
         self.hash = hash
         self.cipher = cipher
         self.initUI(label, pw_page)

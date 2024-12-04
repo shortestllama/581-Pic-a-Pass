@@ -167,7 +167,7 @@ class MainWindow(QMainWindow):
        
 
         #password page
-        self.pw_page = SearchableButtonList.SearchableButtonList( hash, cipher )
+        self.pw_page = SearchableButtonList.SearchableButtonList( my_hash, my_cipher )
         
         #breach page
         self.breach_page = create_breach_page(self)

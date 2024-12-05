@@ -179,8 +179,8 @@ class MainWindow(QMainWindow):
                 cx:1, cy:0,		 /* Center at top-right */
                 radius:1.5, 	 /* Radius goes outside the radius of the screen */
                 fx:1, fy:0,		 /* Focal point at top-right */
-                stop:0 #003087, /* #4169E1, /* #FFEB73, /* #3E8EBD, /* #66ff66, */
-                stop:1 #001F5A /* #1E3A8A /* #CDA200 /* #1D567B /* #043b00 */	 /* Darker than we actually see because radius is larger than we see */
+                stop:0 #C0C5C9, /* #4169E1, /* #FFEB73, /* #3E8EBD, /* #66ff66, */
+                stop:1 #8F9396 /* #1E3A8A /* #CDA200 /* #1D567B /* #043b00 */	 /* Darker than we actually see because radius is larger than we see */
             );
         """)
         #self.w.setStyleSheet( "QTabBar::tab {width: 100px; height: 200px;}" ); #set stylesheet for tab sizes
@@ -216,7 +216,7 @@ def main():
 
     # Simulate loading process
     import time
-    time.sleep(3)
+    #time.sleep(3)
 
     # Check if the Hashed Password file exists
     hashedpass_file = Path(hash.PATH)

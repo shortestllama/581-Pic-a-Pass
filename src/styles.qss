@@ -79,26 +79,26 @@ QPushButton {
 		cx:1, cy:0,
 		radius:1,
 		fx:1, fy:0,
-		stop:0 #002D52, /* #003366, */ /* #A4508B, */
-		stop:1 #001B38 /* #000033 */ /* #5F0A87 */
+		stop:0 #003461, /* #003C6B, /* #002D52, /* #003366, */ /* #A4508B, */
+		stop:1 #001F41 /* #002544 /* #001B38 /* #000033 */ /* #5F0A87 */
 	);
 	color: white;
 	border-style: outset;
 	border-width: 1px;
 	border-radius: 5px;
-	border-color: #043b00;
+	border-color: black;
 	padding: 5px;
 	font-size: 24px;
 }
 
 QPushButton:hover {
-	background-color: #511c8a;
-}
-
-QLabel {
-	font-family: 'Arial';
-	font-size: 24px;
-	color: #333;
+	background: qradialgradient(
+		cx:1, cy:0,
+		radius:1,
+		fx:1, fy:0,
+		stop:0 #001F3B,
+		stop:1 #001228
+	);
 }
 
 /* gold gradient */
@@ -119,6 +119,95 @@ QLabel {
 	border-radius: 5px;
 	border-color: #043b00;
 	font-family: Arial;
+	font-size: 24px;
+}
+
+/* the object itself */
+QComboBox {
+	background: qradialgradient(
+		cx:1, cy:0,
+		radius:1,
+		fx:1, fy:0,
+		stop:0 #C0C5C9,
+		stop:1 #8F9396
+	);
+	border-style: outset;
+	border-width: 1px;
+	border-radius: 5px;
+	border-color: #043b00;
+	font-family: Arial;
+	font-size: 24px;
+}
+
+/* the object itself */
+QComboBox:open {
+	background: qradialgradient(
+		cx:1, cy:0,
+		radius:1,
+		fx:1, fy:0,
+		stop:0 #C0C5C9,
+		stop:1 #8F9396
+	);
+	border-style: outset;
+	border-width: 1px;
+	border-bottom-left-radius: 0px;
+	border-bottom-right-radius: 0px;
+	border-color: #043b00;
+	font-family: Arial;
+	font-size: 24px;
+}
+
+QComboBox:hover {
+	background: qradialgradient(
+		cx:1, cy:0,
+		radius:1,
+		fx:1, fy:0,
+		stop:0 #A8ADB1,
+		stop:1 #787C7F
+	);
+}
+
+/* the object that holds the button */
+QComboBox::drop-down {
+	background: qradialgradient(
+		cx:1, cy:0,
+		radius:1,
+		fx:1, fy:0,
+		stop:0 #003461,
+		stop:1 #001F41
+	);
+}
+
+QComboBox::drop-down:hover {
+	background: qradialgradient(
+		cx:1, cy:0,
+		radius:1,
+		fx:1, fy:0,
+		stop:0 #001F3B,
+		stop:1 #001228
+	);
+}
+
+/* the actual button */
+QComboBox::down-arrow {
+}
+
+/* drop down 'buttons' themselves */
+QComboBox QAbstractItemView {
+	background: qradialgradient(
+		cx:1, cy:0,
+		radius:1,
+		fx:1, fy:0,
+		stop:0 #003461,
+		stop:1 #001F41
+	);
+	color: white;
+	border-style: outset;
+	border-width: 1px;
+	border-bottom-left-radius: 5px;
+	border-bottom-right-radius: 5px;
+	border-color: black;
+	padding: 5px;
 	font-size: 24px;
 }
 

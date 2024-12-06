@@ -53,7 +53,7 @@ def find_sequential_chars(password: str, seq_length: int = 3) -> float:
 
 # This function returns true if the password is in the top 500 passwords
 def check_top_500_passwords(password: str) -> bool:
-    top_500_passwords = [
+    TOP_500_PASSWORDS = [
         "123456",
         "password",
         "12345678",
@@ -544,7 +544,7 @@ def check_top_500_passwords(password: str) -> bool:
         "redwings"
     ]
 
-    return password in top_500_passwords
+    return password in TOP_500_PASSWORDS 
 
 # This function will return a 0, 1, 2 for low, medium, high strength passwords
 def p_strength(password: str) -> int:

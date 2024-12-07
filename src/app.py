@@ -168,20 +168,16 @@ class MainWindow(QMainWindow):
 
         #password page
         self.pw_page = SearchableButtonList.SearchableButtonList( my_hash, my_cipher )
+        self.pw_page.setObjectName("pw")
         
         #breach page
         self.breach_page = create_breach_page(self)
+        self.breach_page.setObjectName("breach")
 
         #Tabs
         self.w = TabWidget.TabWidget()
         self.w.setStyleSheet("""
-            background: qradialgradient(
-                cx:1, cy:0,		 /* Center at top-right */
-                radius:1.5, 	 /* Radius goes outside the radius of the screen */
-                fx:1, fy:0,		 /* Focal point at top-right */
-                stop:0 #C0C5C9, /* #4169E1, /* #FFEB73, /* #3E8EBD, /* #66ff66, */
-                stop:1 #8F9396 /* #1E3A8A /* #CDA200 /* #1D567B /* #043b00 */	 /* Darker than we actually see because radius is larger than we see */
-            );
+            background-color: #8F9396;
         """)
         #self.w.setStyleSheet( "QTabBar::tab {width: 100px; height: 200px;}" ); #set stylesheet for tab sizes
         self.w.addTab( self.pw_page, "Passwords") #set the widget of this tab to the password page widget

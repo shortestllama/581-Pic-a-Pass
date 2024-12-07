@@ -3,6 +3,7 @@ class TabBar(QtWidgets.QTabBar):
     def tabSizeHint(self, index):
         s = QtWidgets.QTabBar.tabSizeHint(self, index)
         s.transpose()
+        s = QtCore.QSize(150, 289) #THIS IS THE REAL SIZE OF THE TABS
         return s
 
     #how do we change the colors of the tabs?

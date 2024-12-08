@@ -1,2 +1,3 @@
-pip install -r "./src/requirements.txt"
-pythonw "./src/app.py"
+cd src
+pip install -r "./requirements.txt"
+pythonw "./app.py"

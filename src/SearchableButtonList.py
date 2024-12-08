@@ -3,7 +3,7 @@ from datetime import datetime, timezone #to fix the time output
 from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QLineEdit, QPushButton, QScrollArea, QVBoxLayout, QHBoxLayout, QFrame, QLabel, QDialog
 from PyQt5 import QtCore
 from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QFont
+from PyQt5.QtGui import QFont, QIcon
 import AddPasswordProfile
 import EditPasswordProfile
 import csv #for reading from csv and creating buttons
@@ -16,6 +16,7 @@ class PasswordProfile( QWidget ):
         super().__init__()
         self.hash = hash
         self.cipher = cipher
+        self.password_visible = False # Init to false because password is initially not visible
         self.initUI(label, pw_page)
 
     def initUI(self, label, pw_page ):
@@ -29,20 +30,43 @@ class PasswordProfile( QWidget ):
         for item in label[:-2]: #get all but the last one (as need to format it)
             if c == 2:
                 #password so is special
-                label_top = QLabel( f"{labels[ c ]}" )
+                label_top = QLabel(labels[ c ])
                 c = c + 1  #counter for Labels
                 layout.addWidget( label_top )
-                label_widget = QLabel(f"{item}") #already decrypted from loading it in
-                label_widget.setTextInteractionFlags( Qt.TextSelectableByMouse ) #set selectable flag
+                self.password_label = QLabel("*" * len(item)) #already decrypted from loading it in
+                self.password_label.setTextInteractionFlags( Qt.TextSelectableByMouse ) #set selectable flag
                 #special labels so have a different style
-                label_widget.setStyleSheet("""
+                self.password_label.setStyleSheet("""
                      QLabel {
                         background-color: white;
                         color: black;
                         font-size: 24px;
                      }
                        """)
-                layout.addWidget(label_widget)
+                layout.addWidget(self.password_label) # Add the password label as a widget
+                self.password = item # Set the password as the current item
+
+                button_layout = QHBoxLayout() # Create a new button layout that will have the clipboard button and the password visiblity button
+                button_layout.setSpacing(5) # Put a little space between buttons
+                button_layout.addStretch() # Move buttons to the far right
+
+                # Button add password visibility
+                self.toggle_button = QPushButton(self) # Create button
+                self.toggle_button.setIcon(QIcon("img/open.png"))  # Use the eye icon for the button
+                self.toggle_button.setCheckable(True)  # Makes the button toggleable
+                self.toggle_button.setFixedSize(24, 24)  # Adjust size for button
+                self.toggle_button.clicked.connect(lambda: self.toggle_password_visibility(self.password)) # On click, change visibility of the password
+                button_layout.addWidget(self.toggle_button) # Add new button to the button layout
+
+                # Button to copy password to clipboard
+                self.clipboard_button = QPushButton(self) # Create button
+                self.clipboard_button.setIcon(QIcon("img/clip.png"))  # Use the eye icon for the button
+                self.clipboard_button.setFixedSize(24, 24)  # Adjust size for button
+                self.clipboard_button.clicked.connect(lambda: self.copy_to_clipboard(self.password)) # Copy password to clipboard
+                button_layout.addWidget(self.clipboard_button) # Add clipboard button to button layout
+                
+                layout.addLayout(button_layout) # Finally, add the buttons to the layout
+
                 self.strength_label = QLabel( "Password strength: Weak" )
                 if p_strength( item ) == 0:
                     #weak
@@ -57,43 +81,43 @@ class PasswordProfile( QWidget ):
                 self.strength_label.setFont(QFont("Arial", 14))
                 layout.addWidget( self.strength_label )
             else:
-                label_top = QLabel( f"{labels[ c ]}" )
+                label_top = QLabel(labels[ c ])
                 c = c + 1  #counter for Labels
                 layout.addWidget( label_top )
-                label_widget = QLabel(f"{item}")
-                label_widget.setTextInteractionFlags( Qt.TextSelectableByMouse ) #set selectable flag
+                self.label_widget = QLabel(item)
+                self.label_widget.setTextInteractionFlags( Qt.TextSelectableByMouse ) #set selectable flag
                 #special labels so have a different style
-                label_widget.setStyleSheet("""
+                self.label_widget.setStyleSheet("""
                      QLabel {
                         background-color: white;
                         color: black;
                         font-size: 24px;
                      }
                        """)
-                layout.addWidget(label_widget)
+                layout.addWidget(self.label_widget)
         #Fix time
-        label_top = QLabel( f"{labels[ c ]}" )
+        label_top = QLabel(labels[ c ]) # Set label to correct label
         # label_top.setStyleSheet("""
         # QLabel {
         #     font-family: Arial;
         #     font-size: 24px;
         # }
         #  """)
-        layout.addWidget( label_top )
+        layout.addWidget( label_top ) # Add label as widget
         utc_time = datetime.fromtimestamp( float( label[ 4 ] ), tz=timezone.utc) #fix time
         central_tz = pytz.timezone('America/Chicago') #convert to central time (Best time)
         central_now = utc_time.astimezone(central_tz)
-        label_widget = QLabel(f"{central_now.strftime("%m-%d-%Y %H:%M")}")
+        self.label_widget = QLabel(f"{central_now.strftime("%m-%d-%Y %H:%M")}")
         #special labels so have a different style
-        label_widget.setStyleSheet("""
+        self.label_widget.setStyleSheet("""
              QLabel {
                 background-color: white;
                 color: black;
                 font-size: 24px;
              }
                """)
-        label_widget.setTextInteractionFlags( Qt.TextSelectableByMouse ) #set selectable flag
-        layout.addWidget(label_widget)
+        self.label_widget.setTextInteractionFlags( Qt.TextSelectableByMouse ) #set selectable flag
+        layout.addWidget(self.label_widget)
         #Add "Edit Password Profile" button to the bottom
         edit_pw_layout = QHBoxLayout() #create a new layout on the bottom to right justify the add button.
         edit_pw_layout.addStretch() #sets left area of horz to empty to push the button to right justify
@@ -116,6 +140,23 @@ class PasswordProfile( QWidget ):
         layout.addWidget( widg ) #add the password profile class oto the layout
         self.edit_password_window.setLayout( layout ) #set the layout to this widget
         self.edit_password_window.show() #show this window
+
+    # Toggles the given password visibility
+    # Given password, prints *'s if not visibile and password otherwise
+    def toggle_password_visibility(self, password):
+        if self.password_visible: # Check if password is currently visibile
+            self.password_label.setText("*" * len(password)) # If so, hide it (set it to *'s)
+            self.toggle_button.setIcon(QIcon("img/open.png")) # Update icon of button to reflect change
+        else: # Password is currently not visible
+            self.password_label.setText(password) # Show the password
+            self.toggle_button.setIcon(QIcon("img/closed.png")) # Update icon of button to reflect change
+        self.password_visible = not self.password_visible # Change state of variable to reflect change
+
+    # Copies the given text to the user's clipboard'
+    def copy_to_clipboard(self, text):
+        clipboard = QApplication.clipboard() # Create a clipboard
+        clipboard.setText(text) # Set the text of the clipboard
+
 class SearchableButtonList(QWidget):
     def __init__(self, hash, cipher):
         super().__init__()

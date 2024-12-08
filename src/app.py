@@ -152,7 +152,7 @@ class SignupScreen(QDialog):
             self.accept() #close this screen and return true
 
         except Exception as e:
-            self.status_label.setText("Error saving password: {e}.")
+            self.status_label.setText(f"Error saving password: {e}.")
 
 # Signup Screen class
 # Subclass QMainWindow to customize your application's main window
@@ -173,7 +173,8 @@ class MainWindow(QMainWindow):
         self.pw_page.setObjectName("pw")
         
         #breach page
-        self.breach_page = create_breach_page(self)
+        self.breach_page = create_breach_page(self, my_cipher)
+        apply_stylesheet(self.breach_page, theme='dark_teal.xml')
         self.breach_page.setObjectName("breach")
 
         #Tabs

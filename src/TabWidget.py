@@ -1,12 +1,3 @@
-<<<<<<< HEAD
-from PyQt5 import QtWidgets, QtCore
-class TabBar(QtWidgets.QTabBar):
-    def tabSizeHint(self, index):
-        s = QtWidgets.QTabBar.tabSizeHint(self, index)
-        s.transpose()
-        s = QtCore.QSize(150, 289) #THIS IS THE REAL SIZE OF THE TABS
-        return s
-=======
 '''
 TabWidget Class
 Contains specification of the TabWidget class for the main window of the program.
@@ -16,8 +7,8 @@ class TabBar(QtWidgets.QTabBar): #used within the TabWidget class.  This is the 
     def tabSizeHint(self, index): #used for formatting
         s = QtWidgets.QTabBar.tabSizeHint(self, index) #get the size of this tab
         s.transpose() #rotate the tab
+        s = QtCore.QSize(150, 289) #THIS IS THE REAL SIZE OF THE TABS
         return s #return it
->>>>>>> 8c5826452d6865ac469e6012a8aaf80d023d444c
 
     #how do we change the colors of the tabs?
     def paintEvent(self, event): #creates the tabs within the tab bar

@@ -2,7 +2,7 @@
 TabWidget Class
 Contains specification of the TabWidget class for the main window of the program.
 '''
-from PyQt5 import QtWidgets, QtCore, QtGui #Needed imports
+from PyQt5 import QtWidgets, QtCore #Needed imports
 class TabBar(QtWidgets.QTabBar): #used within the TabWidget class.  This is the tabs on the side
     def tabSizeHint(self, index): #used for formatting
         s = QtWidgets.QTabBar.tabSizeHint(self, index) #get the size of this tab
@@ -18,8 +18,6 @@ class TabBar(QtWidgets.QTabBar): #used within the TabWidget class.  This is the 
 
         for i in range(self.count()):
             self.initStyleOption(opt, i)
-            
-
             # Draw tab shape
             painter.drawRoundedRect(opt.rect, 5, 5)
             
@@ -28,15 +26,15 @@ class TabBar(QtWidgets.QTabBar): #used within the TabWidget class.  This is the 
             
             # Handle text positioning and rotation
             s = opt.rect.size()
-            s.transpose()
-            r = QtCore.QRect(QtCore.QPoint(), s)
-            r.moveCenter(opt.rect.center())
-            opt.rect = r
+            s.transpose() #rotate the tab so it is sideways instead of vertical
+            r = QtCore.QRect(QtCore.QPoint(), s) #shaped as a rectangle
+            r.moveCenter(opt.rect.center()) #center text
+            opt.rect = r #rectangle object is saved
 
-            c = self.tabRect(i).center()
-            painter.translate(c)
-            painter.rotate(90)
-            painter.translate(-c)
+            c = self.tabRect(i).center() #center rectangle object
+            painter.translate(c) # move the tabs to align
+            painter.rotate(90)  #rotate the window that the tab is inside
+            painter.translate(-c) #move tab back so now it is correct location and orientation
             
             # Draw the text
             painter.drawControl(QtWidgets.QStyle.CE_TabBarTabLabel, opt)

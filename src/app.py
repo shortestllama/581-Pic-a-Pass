@@ -216,6 +216,10 @@ def main():
             #apply_stylesheet(window, theme='dark_teal.xml')
             window.resize( 900, 600 ) #width, height
             window.show()
+
+        else:
+            app.quit()
+            return
     
     # If it is not, ask the user for a password and create the file
     else:    
@@ -228,6 +232,10 @@ def main():
             window = MainWindow( hash, cipher ) #CREATE main window
             window.resize( 900, 600 ) #width, height
             window.show()
+
+        else:
+            app.quit()
+            return
 
     sys.exit(app.exec())
     #app.exec() 

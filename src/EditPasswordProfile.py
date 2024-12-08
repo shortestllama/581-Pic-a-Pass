@@ -21,51 +21,17 @@ class EditPasswordProfile(QWidget):
         self.layout = QVBoxLayout()
         #website
         self.label_website = QLabel( "Website" )
-        # self.label_website.setStyleSheet("""
-        #     QLabel {
-        #         font-family: Arial;
-        #         font-size: 24px;
-        #     }
-        #         """)
         self.layout.addWidget( self.label_website )
         self.label_websiteReal = QLineEdit( label[ 0 ] ) #set label as website name
-        # self.label_websiteReal.setStyleSheet("""
-        #     QLineEdit {
-        #         font-family: Arial;
-        #         font-size: 20px;
-        #         border: 1px solid black;
-        #         background-color: white;
-            # }
-            #  """)
         self.label_websiteReal.setReadOnly( True )
         self.layout.addWidget( self.label_websiteReal )
         #Username
         self.label_uname = QLabel( "Username" )
-        # self.label_uname.setStyleSheet("""
-        #     QLabel {
-        #         font-family: Arial;
-        #         font-size: 24px;
-        #     }
-        #         """)
         self.layout.addWidget( self.label_uname )
         self.label_unameReal = QLineEdit( label[ 1 ] ) #set label as user name
-        # self.label_unameReal.setStyleSheet("""
-        #     QLineEdit {
-        #         font-family: Arial;
-        #         font-size: 20px;
-        #         border: 1px solid black;
-        #         background-color: white;
-            # }
-            #  """)
         self.layout.addWidget( self.label_unameReal )
         #Password
         self.label_pw = QLabel( "Password" )
-        # self.label_pw.setStyleSheet("""
-        #     QLabel {
-        #         font-family: Arial;
-        #         font-size: 24px;
-        #     }
-        #         """)
         self.layout.addWidget( self.label_pw )
         password = label[ 2 ]
         nonce = label[ 5 ]
@@ -80,22 +46,8 @@ class EditPasswordProfile(QWidget):
         self.check_password_strength() #sets original colors
         #Notes
         self.label_note = QLabel( "Username" )
-        # self.label_note.setStyleSheet("""
-        #     QLabel {
-        #         font-family: Arial;
-        #         font-size: 24px;
-        #     }
-        #         """)
         self.layout.addWidget( self.label_note )
         self.label_noteReal = QLineEdit( label[ 3 ] ) #set label as user name
-        # self.label_noteReal.setStyleSheet("""
-        #     QLineEdit {
-        #         font-family: Arial;
-        #         font-size: 20px;
-        #         border: 1px solid black;
-        #         background-color: white;
-            # }
-            #  """)
         self.layout.addWidget( self.label_noteReal )
         #Add "Edit Password Profile" button to the bottom
         # Generate button

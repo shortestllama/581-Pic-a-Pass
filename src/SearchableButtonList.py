@@ -9,7 +9,7 @@ import EditPasswordProfile
 import csv #for reading from csv and creating buttons
 import OptionsWindow
 from password_strength import p_strength #password strength function
-#from qt_material import apply_stylesheet
+from qt_material import apply_stylesheet
 
 class PasswordProfile( QWidget ):
     def __init__(self, label, pw_page, hash, cipher):
@@ -35,14 +35,6 @@ class PasswordProfile( QWidget ):
                 layout.addWidget( label_top )
                 self.password_label = QLabel("*" * len(item)) #already decrypted from loading it in
                 self.password_label.setTextInteractionFlags( Qt.TextSelectableByMouse ) #set selectable flag
-                #special labels so have a different style
-                self.password_label.setStyleSheet("""
-                     QLabel {
-                        background-color: white;
-                        color: black;
-                        font-size: 24px;
-                     }
-                       """)
                 layout.addWidget(self.password_label) # Add the password label as a widget
                 self.password = item # Set the password as the current item
 
@@ -86,36 +78,14 @@ class PasswordProfile( QWidget ):
                 layout.addWidget( label_top )
                 self.label_widget = QLabel(item)
                 self.label_widget.setTextInteractionFlags( Qt.TextSelectableByMouse ) #set selectable flag
-                #special labels so have a different style
-                self.label_widget.setStyleSheet("""
-                     QLabel {
-                        background-color: white;
-                        color: black;
-                        font-size: 24px;
-                     }
-                       """)
                 layout.addWidget(self.label_widget)
         #Fix time
         label_top = QLabel(labels[ c ]) # Set label to correct label
-        # label_top.setStyleSheet("""
-        # QLabel {
-        #     font-family: Arial;
-        #     font-size: 24px;
-        # }
-        #  """)
         layout.addWidget( label_top ) # Add label as widget
         utc_time = datetime.fromtimestamp( float( label[ 4 ] ), tz=timezone.utc) #fix time
         central_tz = pytz.timezone('America/Chicago') #convert to central time (Best time)
         central_now = utc_time.astimezone(central_tz)
         self.label_widget = QLabel(f"{central_now.strftime("%m-%d-%Y %H:%M")}")
-        #special labels so have a different style
-        self.label_widget.setStyleSheet("""
-             QLabel {
-                background-color: white;
-                color: black;
-                font-size: 24px;
-             }
-               """)
         self.label_widget.setTextInteractionFlags( Qt.TextSelectableByMouse ) #set selectable flag
         layout.addWidget(self.label_widget)
         #Add "Edit Password Profile" button to the bottom
@@ -172,45 +142,12 @@ class SearchableButtonList(QWidget):
         # Search bar setup
         search_pw_layout = QHBoxLayout() #search bar then options
         self.search_bar = QLineEdit(self)
-        self.search_bar.setStyleSheet("""
-            background-color: white;
-            color: black;
-            font-size: 24px;
-        """)
         self.search_bar.setPlaceholderText("Search...")
         self.search_bar.textChanged.connect(self.filter_buttons)
         self.search_bar.setFont(QFont("Arial", 16))  # Set font size to 16
         search_pw_layout.addWidget( self.search_bar ) #add to top bar
         #options button
         self.options = QPushButton( "Options", self )
-        self.options.setStyleSheet("""
-            QPushButton {
-                background: qradialgradient(
-                    cx:1, cy:0,
-                    radius:1,
-                    fx:1, fy:0,
-                    stop:0 #003461,
-                    stop:1 #001F41
-                );
-                color: white;
-                border-style: outset;
-                border-width: 1px;
-                border-radius: 5px;
-                border-color: black;
-                padding: 5px;
-                font-size: 24px;
-            }
-            
-            QPushButton:hover {
-                background: qradialgradient(
-                    cx:1, cy:0,
-                    radius:1,
-                    fx:1, fy:0,
-                    stop:0 #001F3B,
-                    stop:1 #001228
-                );
-            }
-        """)
         self.options.setVisible( True ) #display
         self.options.setFont(QFont("Arial", 16))  # Set font size to 16
         self.options.clicked.connect(lambda: self.create_options())  # Connect click event add password
@@ -219,16 +156,7 @@ class SearchableButtonList(QWidget):
         
         # Scrollable area setup
         self.scroll_area = QScrollArea(self)
-        self.scroll_area.setStyleSheet("""
-            background: qradialgradient(
-                cx:1, cy:0,		 /* Center at top-right */
-                radius:1.5, 	 /* Radius goes outside the radius of the screen */
-                fx:1, fy:0,		 /* Focal point at top-right */
-                stop:0 #66ff66, 
-                stop:1 #043b00 	 /* Darker than we actually see because radius is larger than we see */
-            );
-        """)
-        #apply_stylesheet(self.scroll_area, theme='dark_teal.xml')
+        apply_stylesheet(self.scroll_area, theme='dark_teal.xml')
         self.scroll_area.setWidgetResizable(True)
         self.main_layout.addWidget( self.scroll_area )
         self.refresh( )
@@ -236,34 +164,6 @@ class SearchableButtonList(QWidget):
         add_pw_layout = QHBoxLayout() #create a new layout on the bottom to right justify the add button.
         add_pw_layout.addStretch() #sets left area of horz to empty to push the button to right justify
         self.add_pw = QPushButton( "Add Password", self )
-        self.add_pw.setStyleSheet("""
-            QPushButton {
-                background: qradialgradient(
-                    cx:1, cy:0,
-                    radius:1,
-                    fx:1, fy:0,
-                    stop:0 #003461,
-                    stop:1 #001F41
-                );
-                color: white;
-                border-style: outset;
-                border-width: 1px;
-                border-radius: 5px;
-                border-color: black;
-                padding: 5px;
-                font-size: 24px;
-            }
-            
-            QPushButton:hover {
-                background: qradialgradient(
-                    cx:1, cy:0,
-                    radius:1,
-                    fx:1, fy:0,
-                    stop:0 #001F3B,
-                    stop:1 #001228
-                );
-            }
-        """)
         self.add_pw.setVisible( True ) #display 
         self.add_pw.resize( 250, 150 ) #change size
         self.add_pw.setFont(QFont("Arial", 16))  # Set font size to 16
@@ -313,17 +213,6 @@ class SearchableButtonList(QWidget):
         scroll_content = QWidget()
         self.scroll_layout = QVBoxLayout(scroll_content)
         self.scroll_area.setWidget(scroll_content)
-        # self.scroll_area.setStyleSheet("""
-        #     QScrollArea {
-        #         border: 2px solid black;
-        #         border-radius: 10px; /* Adjust the radius as needed */
-                
-        #     }
-        #     QScrollArea > QWidget > QWidget {
-        #         background: White; /* Set the background color of the content area */
-        #         border-radius: 10px;
-        #     }
-        # """)
         
         # Create buttons
         self.buttons = []
@@ -348,34 +237,6 @@ class SearchableButtonList(QWidget):
         for label in data: #Labels look like: weburl, username, password, notes, timestamp, nonce
             if len(label) > 0:
                 button = QPushButton(label[ 0 ], self)
-                button.setStyleSheet("""
-                    QPushButton {
-                        background: qradialgradient(
-                            cx:1, cy:0,
-                            radius:1,
-                            fx:1, fy:0,
-                            stop:0 #003461,
-                            stop:1 #001F41
-                        );
-                        color: white;
-                        border-style: outset;
-                        border-width: 1px;
-                        border-radius: 5px;
-                        border-color: black;
-                        padding: 5px;
-                        font-size: 24px;
-                    }
-                    
-                    QPushButton:hover {
-                        background: qradialgradient(
-                            cx:1, cy:0,
-                            radius:1,
-                            fx:1, fy:0,
-                            stop:0 #001F3B,
-                            stop:1 #001228
-                        );
-                    }
-                """)
                 button.setVisible(True) #make them display in the scroll area 
                 label[2] = self.cipher.decrypt(label[2], label[5], label[1].encode('utf-8'))
                 button.clicked.connect(lambda checked, l=label: self.button_clicked(l))  # Connect click event

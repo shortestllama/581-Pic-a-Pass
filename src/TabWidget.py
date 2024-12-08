@@ -45,15 +45,3 @@ class TabWidget(QtWidgets.QTabWidget):
         super().__init__(*args, **kwargs)
         self.setTabBar(TabBar(self))
         self.setTabPosition(QtWidgets.QTabWidget.West)
-        
-        # Style the tab widget container
-        self.setStyleSheet("""
-            QTabWidget::pane {
-                border: 1px solid #BDBDBD;
-                border-radius: 5px;
-                background: white;
-            }
-            QTabWidget::tab-bar {
-                left: 5px;
-            }
-        """)

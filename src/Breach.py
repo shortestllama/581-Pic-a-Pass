@@ -103,7 +103,6 @@ def create_breach_page(main_window, cipher) -> QWidget:
     # Initialize the API checker and the UI
     checker = APIChecker()
     breach_page = QWidget(main_window)
-    breach_page.setObjectName("breach")
     
     # Create main layout
     main_layout = QVBoxLayout()

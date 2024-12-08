@@ -22,19 +22,12 @@ from PyQt5.QtWidgets import (
     QFrame,
     QDialog
 )
-from qt_material import apply_stylesheet
-
-#def create_pw_page( self ):
-#    #read CSV file
-#    with open( 'passwords.csv', 'r' ) as file:
-#        reader = csv.reader( file )
-#        data = list( reader )
-#    return SearchableButtonList.SearchableButtonList( data )
 
 #USE QDialog as it blocks creation of other windows until it has finished executing
 class LoginScreen(QDialog):
     def __init__(self, my_hash, my_cipher):
         super().__init__()
+        self.setObjectName("login_screen")
         self.my_hash = my_hash
         self.my_cipher = my_cipher
         self.initUI()
@@ -168,15 +161,23 @@ class MainWindow(QMainWindow):
 
         #password page
         self.pw_page = SearchableButtonList.SearchableButtonList( my_hash, my_cipher )
-        apply_stylesheet(self.pw_page, theme='dark_teal.xml')
+        self.pw_page.setObjectName("pw")
+
+        with open("styles.qss", "r") as file:
+            self.pw_page.setStyleSheet(file.read())
         
         #breach page
         self.breach_page = create_breach_page(self, my_cipher)
-        apply_stylesheet(self.breach_page, theme='dark_teal.xml')
+        self.breach_page.setObjectName("breach")
+
+        with open("styles.qss", "r") as file:
+            self.breach_page.setStyleSheet(file.read())
 
         #Tabs
         self.w = TabWidget.TabWidget()
-        apply_stylesheet(self.w, theme='dark_teal.xml')
+        self.w.setStyleSheet("""
+            background-color: #8F9396;
+        """)
         self.w.addTab( self.pw_page, "Passwords") #set the widget of this tab to the password page widget
         self.w.addTab( self.breach_page, "Breaches") #set the widget of this tab to the breach page widget
         self.w.resize(900, 600) #width, height
@@ -199,7 +200,9 @@ def main():
     app = QApplication(sys.argv)
     splash = SplashScreen.SplashScreen()
     splash.show()
-    apply_stylesheet(app, theme='dark_teal.xml')
+
+    with open("styles.qss", "r") as file:
+            app.setStyleSheet(file.read())
 
     # Check if the Hashed Password file exists
     hashedpass_file = Path(hash.PATH)
@@ -213,7 +216,6 @@ def main():
         splash.finish(login)
         if login.exec_() == QDialog.Accepted: #wait for dialog to close
             window = MainWindow( hash, cipher ) #CREATE main window
-            #apply_stylesheet(window, theme='dark_teal.xml')
             window.resize( 900, 600 ) #width, height
             window.show()
 

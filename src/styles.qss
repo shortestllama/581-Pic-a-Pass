@@ -38,16 +38,9 @@ QWidget#login_screen {
 	);
 }
 
-/* same ^ */
+/* solid gray */
 QWidget#breach {
-	/* background-color: #1D567B; */
-	background: qradialgradient(
-		cx:1, cy:0,		 /* Center at top-right */
-		radius:1.5, 	 /* Radius goes outside the radius of the screen */
-		fx:1, fy:0,		 /* Focal point at top-right */
-		stop:0 #003087, /* #4169E1, /* #FFEB73, /* #3E8EBD, /* #66ff66, */
-		stop:1 #001F5A /* #1E3A8A /* #CDA200 /* #1D567B /* #043b00 */	 /* Darker than we actually see because radius is larger than we see */
-	);
+	background-color: #8F9396;
 }
 
 /* green gradient */
@@ -106,6 +99,7 @@ QPushButton:hover {
 /* gold and green = notre dame */
 /* currently wolf gray = seahawks */
 /* first comment is white to steel blue, second is steel blue, third is gold */
+/* currently gray */
 QLabel {
 	background: qradialgradient(
 		cx:1, cy:0,
@@ -117,9 +111,20 @@ QLabel {
 	border-style: outset;
 	border-width: 1px;
 	border-radius: 5px;
-	border-color: #043b00;
+	border-color: black; /* #043b00; */
 	font-family: Arial;
 	font-size: 24px;
+}
+
+QLabel#header {
+	background: qradialgradient(
+		cx:1, cy:0,
+		radius:1,
+		fx:1, fy:0,
+		stop:0 #003461, /* #003C6B, /* #002D52, /* #003366, */ /* #A4508B, */
+		stop:1 #001F41 /* #002544 /* #001B38 /* #000033 */ /* #5F0A87 */
+	);
+	color: white;
 }
 
 /* the object itself */
@@ -168,10 +173,6 @@ QComboBox::drop-down:hover {
 		stop:0 #001F3B,
 		stop:1 #001228
 	);
-}
-
-/* the actual button */
-QComboBox::down-arrow {
 }
 
 /* drop down 'buttons' themselves */

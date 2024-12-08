@@ -109,6 +109,7 @@ def create_breach_page(main_window, cipher) -> QWidget:
     # Initialize the API checker and the UI
     checker = APIChecker()
     breach_page = QWidget(main_window)
+    breach_page.setObjectName("breach")
     
     # Create main layout
     main_layout = QVBoxLayout()
@@ -124,7 +125,8 @@ def create_breach_page(main_window, cipher) -> QWidget:
     
     # Add header label
     header = QLabel("Password Breach Check Results")
-    header.setStyleSheet("font-size: 14px; font-weight: bold; margin: 10px;")
+    header.setObjectName("header")
+    header.setAlignment(Qt.AlignCenter)
     main_layout.addWidget(header)
     
     # Add scroll area
@@ -144,7 +146,9 @@ def create_breach_page(main_window, cipher) -> QWidget:
             # Try to read password file
             if not os.path.exists('passwords.csv'):
                 error_label = QLabel("Error: passwords.csv not found!") # If the passwords file isnt there tell the user
-                error_label.setStyleSheet("color: red;") # Set the color to red
+                error_label.setStyleSheet("""
+                    font-size: 16px;
+                """)
                 results_layout.addRow(error_label) # Add the error message to the screen
                 return
                 
@@ -153,6 +157,9 @@ def create_breach_page(main_window, cipher) -> QWidget:
             
             if not passwords: # If the passwords file doesnt exist,
                 results_layout.addRow(QLabel("No passwords found in file!")) # Tell the user the file cant be found
+                results_layout.setStyleSheet("""
+                    font-size: 16px;
+                """)
                 return
                 
             # Disable button
@@ -164,14 +171,18 @@ def create_breach_page(main_window, cipher) -> QWidget:
             # Function for the result of the worker thread
             def on_result(website, username, num_breaches):
                 # Print the website and how many times that password has been breached
-                label = QLabel(f"Password for {website} ({username}) has been breached {num_breaches} times!") 
-                label.setStyleSheet("color: #d32f2f; font-weight: bold;") # Set the color and bold text
+                label = QLabel(f"Password for {website} ({username}) has been breached {num_breaches} times!")
+                label.setStyleSheet("""
+                    font-size: 16px;
+                """)
                 results_layout.addRow(label) # Add the result to the screen
                 
             # Function for error sent from worker thread
             def on_error(error_msg):
                 label = QLabel(error_msg) # Print the error message
-                label.setStyleSheet("color: #f57c00;") # Set the color
+                label.setStyleSheet("""
+                    font-size: 16px;
+                """)
                 results_layout.addRow(label) # Add it to the screen
                 
             # Function for when the worker thread is finished
@@ -179,7 +190,9 @@ def create_breach_page(main_window, cipher) -> QWidget:
                 check_button.setEnabled(True) #Re enable the check passwords button
                 if results_layout.rowCount() == 0: #If no breaches were found
                     label = QLabel("No breached passwords found!") # Tell the user no breaches were found
-                    label.setStyleSheet("color: green; font-weight: bold;") # Set the font to green color
+                    label.setStyleSheet("""
+                        font-size: 16px;
+                    """)
                     results_layout.addRow(label) # Add the message to the screen
             
             # Keep a reference to the thread to prevent garbage collection
@@ -196,7 +209,9 @@ def create_breach_page(main_window, cipher) -> QWidget:
         # This notifies the user that an error occured when opening password file
         except Exception as e:
             error_label = QLabel(f"Error reading password file: {str(e)}")
-            error_label.setStyleSheet("color: red;")
+            error_label.setStyleSheet("""
+                font-size: 16px;
+            """)
             results_layout.addRow(error_label)
     
     # Connects the button to the start_check function

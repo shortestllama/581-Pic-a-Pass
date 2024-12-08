@@ -46,10 +46,6 @@ class AddPasswordProfile(QWidget):
         self.input2 = QLineEdit() #Username
         self.input3 = QLineEdit() #Password
         self.input4 = QLineEdit() #notes
-        self.input1.setStyleSheet("color: white;") # Set the color
-        self.input2.setStyleSheet("color: white;") # Set the color
-        self.input3.setStyleSheet("color: white;") # Set the color
-        self.input4.setStyleSheet("color: white;") # Set the color
 
         
         # Add input fields to the form layout with labels

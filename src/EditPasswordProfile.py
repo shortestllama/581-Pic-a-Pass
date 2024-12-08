@@ -66,7 +66,7 @@ class EditPasswordProfile(QWidget):
         self.label_pwReal.textChanged.connect(self.check_password_strength)
         self.check_password_strength() #sets original colors
         #Notes
-        self.label_note = QLabel( "Username" )
+        self.label_note = QLabel( "Notes" )
         self.layout.addWidget( self.label_note )
         self.label_noteReal = QLineEdit( label[ 3 ] ) #set label as user name
         self.layout.addWidget( self.label_noteReal )

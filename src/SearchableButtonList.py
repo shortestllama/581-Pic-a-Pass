@@ -145,11 +145,14 @@ class SearchableButtonList(QWidget):
         self.search_bar.setPlaceholderText("Search...")
         self.search_bar.textChanged.connect(self.filter_buttons)
         self.search_bar.setFont(QFont("Arial", 16))  # Set font size to 16
+        self.search_bar.setStyleSheet("color: white;") # Set the color and bold text
+
         search_pw_layout.addWidget( self.search_bar ) #add to top bar
         #options button
         self.options = QPushButton( "Options", self )
         self.options.setVisible( True ) #display
         self.options.setFont(QFont("Arial", 16))  # Set font size to 16
+
         self.options.clicked.connect(lambda: self.create_options())  # Connect click event add password
         search_pw_layout.addWidget( self.options )
         self.main_layout.addLayout( search_pw_layout )

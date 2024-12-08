@@ -100,7 +100,7 @@ class SignupScreen(QDialog):
         self.my_hash = my_hash
         self.my_cipher = my_cipher
         self.setWindowTitle("Sign Up")
-        self.setFixedSize(300, 200)
+        self.setFixedSize(900, 600)
 
 
         # Layout setup

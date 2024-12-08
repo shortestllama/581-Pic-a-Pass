@@ -127,7 +127,6 @@ class EditPasswordProfile(QWidget):
             nonce.decode('utf-8')
         ]
 
-        
         # Open file dialog to choose where to save the CSV
         file_path = "passwords.csv"
         

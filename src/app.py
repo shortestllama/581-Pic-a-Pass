@@ -173,7 +173,7 @@ class MainWindow(QMainWindow):
         self.pw_page.setObjectName("pw")
         
         #breach page
-        self.breach_page = create_breach_page(self)
+        self.breach_page = create_breach_page(self, my_cipher)
         self.breach_page.setObjectName("breach")
 
         #Tabs

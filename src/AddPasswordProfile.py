@@ -6,6 +6,8 @@ from cryptoutils import PasswordCipher
 from PyQt5.QtGui import QFont
 from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QFormLayout, QLineEdit, QPushButton, QMessageBox, QLabel
 from password_strength import p_strength #password strength function
+from qt_material import apply_stylesheet
+
 class AddPasswordProfile(QWidget):
     def __init__(self, super_window, super_object, hash, cipher):
         super().__init__()
@@ -23,6 +25,11 @@ class AddPasswordProfile(QWidget):
         self.input2 = QLineEdit()
         self.input3 = QLineEdit()
         self.input4 = QLineEdit()
+        self.input1.setStyleSheet("color: white;") # Set the color
+        self.input2.setStyleSheet("color: white;") # Set the color
+        self.input3.setStyleSheet("color: white;") # Set the color
+        self.input4.setStyleSheet("color: white;") # Set the color
+
         
         # Add input fields to the form layout with labels
         form_layout.addRow("Web URL:", self.input1)

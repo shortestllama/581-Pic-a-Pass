@@ -1,3 +1,27 @@
+'''
+Artifact: Pic-a-Pass SearchableButtonList.py
+Description: Window to display the main button searching and display class
+Author(s): Jesse DeBok
+Precondition(s): Main Window has been created to pass in the super window and object for updating.
+Postcondition(s): None
+Error(s): None
+Side effect(s): None
+Invariant(s): None
+Known fault(s): None
+
+#########################################################################################
+| Author       |  Date      | Revise Description                                        |
+#########################################################################################
+| Jesse DeBok  | 11/07/24   | Creation                                                  |
+| Jesse DeBok  | 11/10/24   | Sorting                                                   |
+| Team         | 11/24/24   | Searching                                                 |
+| Jesse DeBok  | 11/26/24   | Refresh                                                   |
+| Jack Ford    | 12/04/24   | Visuals                                                   |
+| Jack Ford    | 12/05/24   | Visuals                                                   |
+| Caden        | 12/06/24   | Visuals                                                   |
+| Jesse DeBok  | 12/08/24   | Comments                                                  |
+#########################################################################################
+'''
 import sys, time, pytz
 from datetime import datetime, timezone #to fix the time output
 from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QLineEdit, QPushButton, QScrollArea, QVBoxLayout, QHBoxLayout, QFrame, QLabel, QDialog
@@ -13,19 +37,19 @@ from password_strength import p_strength #password strength function
 class PasswordProfile( QWidget ):
     def __init__(self, label, pw_page, hash, cipher):
         super().__init__()
-        self.hash = hash
-        self.cipher = cipher
+        self.hash = hash #from sign in page
+        self.cipher = cipher #from sign in page
         self.password_visible = False # Init to false because password is initially not visible
-        self.initUI(label, pw_page)
+        self.initUI(label, pw_page) #create window
 
     def initUI(self, label, pw_page ):
         self.setWindowTitle("Password Profile")
-        self.resize(900, 600)
+        self.resize(900, 600) #window size
         
         # Display label in new window
-        layout = QVBoxLayout()
+        layout = QVBoxLayout() #layout of buttons
         labels = [ "Website", "Username", "Password", "Notes", "Last Updated" ]
-        c = 0
+        c = 0 #counter for special
         for item in label[:-2]: #get all but the last one (as need to format it)
             if c == 2:
                 #password so is special
@@ -153,10 +177,10 @@ class PasswordProfile( QWidget ):
 class SearchableButtonList(QWidget):
     def __init__(self, hash, cipher):
         super().__init__()
-        self.hash = hash
-        self.cipher = cipher
+        self.hash = hash #from sign in page
+        self.cipher = cipher #from sign in page
         self.order = 3 #set default order
-        self.initUI()
+        self.initUI() #create window
 
     def initUI(self):
         # Layout setup

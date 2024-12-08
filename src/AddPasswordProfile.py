@@ -1,3 +1,24 @@
+'''
+Artifact: Pic-a-Pass AddPasswordProfile.py
+Description: Window to add passwords to the password.csv file.
+Author(s): Jesse DeBok
+Precondition(s): Main Window has been created to pass in the super window and object for updating.
+Postcondition(s): None
+Error(s):
+- File save error: Cannot save to passwords.csv as it does not exist or has other writing issues.
+Side effect(s): Showing can fail if passwords.csv has been changed.
+Invariant(s): None
+Known fault(s): None
+
+#########################################################################################
+| Author       |  Date      | Revise Description                                        |
+#########################################################################################
+| Ben Schulte  | 11/23/24   | Document created                                          |
+| Ben Schulte  | 11/24/24   | Updated functions to output base64 encoded data to files  |
+| Ben Schulte  | 12/3/24    | Added functions for doing steganography                   |
+| Ben Schulte  | 12/8/24    | Added final comments to the document                      |
+#########################################################################################
+'''
 import sys
 import csv
 import time
@@ -48,7 +69,7 @@ class AddPasswordProfile(QWidget):
         generate_button.clicked.connect( self.generate_pw )
         layout.addWidget( generate_button )
         # Save button
-        save_button = QPushButton("Save to CSV")
+        save_button = QPushButton("Save")
         save_button.clicked.connect(self.save_to_csv)
         save_button.clicked.connect( super_window.close )
         #refresh the main page

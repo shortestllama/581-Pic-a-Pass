@@ -198,10 +198,6 @@ class MainWindow(QMainWindow):
         if index == 0:
             #refresh tab 1
             self.pw_page.refresh()
-        elif index == 1:
-            #refresh tab 2
-            #TODO
-            print( "TODO" )
 
 def main():
     # Set up hash and cipher

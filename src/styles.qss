@@ -1,249 +1,204 @@
-/* black on green overall */
-/* login screen has a gear that has an animation on login */
-/*  - purple buttons instead of blue */
-/*		gradient? */
-/* the steel blue and wolf gray are harsh */
-/* but the green and navy go well together */
-/* gold is not better */
-/* no color seems to work on the breach page */
-
-/* still need to fix up tabs quite a bit */
-
-/* green gradient */
-/* changed to steel blue */
-/* back to green */
+/* green */
 QWidget {
-	background: qradialgradient(
+	background: qradialgradient( /* background set to a radial gradient */
 		cx:1, cy:0,		 /* Center at top-right */
 		radius:1.5, 	 /* Radius goes outside the radius of the screen */
 		fx:1, fy:0,		 /* Focal point at top-right */
-		stop:0 #66ff66, 
+		stop:0 #66ff66,  /* start of green gradient */
 		stop:1 #043b00 	 /* Darker than we actually see because radius is larger than we see */
 	);
 }
 
-/* black */
-/* now it's green */
-/* steel blue */
-/* gold */
 /* green */
 QWidget#login_screen {
-	/* background-color: #1D567B; */
-	background: qradialgradient(
+	background: qradialgradient( /* background set to a radial gradient */
 		cx:1, cy:0,		 /* Center at top-right */
 		radius:1.5, 	 /* Radius goes outside the radius of the screen */
 		fx:1, fy:0,		 /* Focal point at top-right */
-		stop:0 #66ff66, 
+		stop:0 #66ff66,  /* start of green gradient */
 		stop:1 #043b00 	 /* Darker than we actually see because radius is larger than we see */
 	);
 }
 
 /* solid gray */
 QWidget#breach {
-	background-color: #8F9396;
+	background-color: #8F9396; /* gray background color */
 }
 
 /* green gradient */
-/* lowkey don't even think this does anything technically */
 QMainWindow {
-	background: qradialgradient(
+	background: qradialgradient( /* background set to a radial gradient */
 		cx:1, cy:0,		 /* Center at top-right */
 		radius:1.5, 	 /* Radius goes outside the radius of the screen */
 		fx:1, fy:0,		 /* Focal point at top-right */
-		stop:0 #66ff66, 
+		stop:0 #66ff66,  /* start of green gradient */
 		stop:1 #043b00 	 /* Darker than we actually see because radius is larger than we see */
 	);
 }
 
 QLineEdit {
-	background-color: white;
-	color: black;
-	font-size: 24px;
+	background-color: white; /* white background color */
+	color: black; /* black text color */
+	font-size: 24px; /* font size */
 }
 
-/* purple gradient */
-/* now navy */
-/* like navy better, but don't know which one */
-/* currently set to college navy, first comment is navy, second comment is purple */
+/* college navy */
 QPushButton {
-	/* maybe add a gradient? */
-	/* background-color: #8628e9; */
-	background: qradialgradient(
-		cx:1, cy:0,
-		radius:1,
-		fx:1, fy:0,
-		stop:0 #003461, /* #003C6B, /* #002D52, /* #003366, */ /* #A4508B, */
-		stop:1 #001F41 /* #002544 /* #001B38 /* #000033 */ /* #5F0A87 */
+	background: qradialgradient( /* background set to a radial gradient */
+		cx:1, cy:0,		 /* Center at top-right */
+		radius:1,        /* set the radius to the size of the screen */
+		fx:1, fy:0,      /* focal point at top-right */
+		stop:0 #003461,  /* start of navy gradient */
+		stop:1 #001F41   /* end of navy gradient */
 	);
-	color: white;
-	border-style: outset;
-	border-width: 1px;
-	border-radius: 5px;
-	border-color: black;
-	padding: 5px;
-	font-size: 24px;
+	color: white; /* text color white */
+	border-style: outset; /* set the border style */
+	border-width: 1px; /* set the border width */
+	border-radius: 5px; /* set the border radius */
+	border-color: black; /* set the border color to black */
+	padding: 5px; /* set the padding */
+	font-size: 24px; /* set the font size */
 }
 
 QPushButton:hover {
-	background: qradialgradient(
-		cx:1, cy:0,
-		radius:1,
-		fx:1, fy:0,
-		stop:0 #001F3B,
-		stop:1 #001228
+	background: qradialgradient( /* background set to a radial gradient */
+		cx:1, cy:0,		 /* Center at top-right */
+		radius:1,        /* set the radius to the size of the screen */
+		fx:1, fy:0,      /* focal point at top-right */
+		stop:0 #001F3B,  /* start of darker navy gradient */
+		stop:1 #001228   /* end of darker navy gradient */
 	);
 }
 
-/* gold gradient */
-/* BETTER ONE */
-/* gold and green = notre dame */
-/* currently wolf gray = seahawks */
-/* first comment is white to steel blue, second is steel blue, third is gold */
-/* currently gray */
+/* gray */
 QLabel {
-	background: qradialgradient(
-		cx:1, cy:0,
-		radius:1,
-		fx:1, fy:0,
-		stop:0 #C0C5C9, /* #ffffff, */ /* #3E8EBD, */ /* #FFEB73, */
-		stop:1 #8F9396 /* #3e8ebd */ /* #1D567B */ /* #CDA200 */
+	background: qradialgradient( /* background set to a radial gradient */
+		cx:1, cy:0,		 /* Center at top-right */
+		radius:1,        /* set the radius to the size of the screen */
+		fx:1, fy:0,      /* focal point at top-right */
+		stop:0 #C0C5C9,  /* start of gray gradient */
+		stop:1 #8F9396   /* end of gray gradient */
 	);
-	border-style: outset;
-	border-width: 1px;
-	border-radius: 5px;
-	border-color: black; /* #043b00; */
-	font-family: Arial;
-	font-size: 24px;
+	border-style: outset; /* set the border style */
+	border-width: 1px; /* set the border width */
+	border-radius: 5px; /* set the border radius */
+	border-color: black; /* set the border color to black */
+	font-family: Arial; /* set the font */
+	font-size: 24px; /* set the font size */
 }
 
 QLabel#header {
-	background: qradialgradient(
-		cx:1, cy:0,
-		radius:1,
-		fx:1, fy:0,
-		stop:0 #003461, /* #003C6B, /* #002D52, /* #003366, */ /* #A4508B, */
-		stop:1 #001F41 /* #002544 /* #001B38 /* #000033 */ /* #5F0A87 */
+	background: qradialgradient( /* background set to a radial gradient */
+		cx:1, cy:0,		 /* Center at top-right */
+		radius:1,        /* set the radius to the size of the screen */
+		fx:1, fy:0,      /* focal point at top-right */
+		stop:0 #003461,  /* start of navy gradient */
+		stop:1 #001F41   /* end of navy gradient */
 	);
-	color: white;
+	color: white; /* text color white */
 }
 
 /* the object itself */
 QComboBox {
-	background: qradialgradient(
-		cx:1, cy:0,
-		radius:1,
-		fx:1, fy:0,
-		stop:0 #C0C5C9,
-		stop:1 #8F9396
+	background: qradialgradient( /* background set to a radial gradient */
+		cx:1, cy:0,		 /* Center at top-right */
+		radius:1,        /* set the radius to the size of the screen */
+		fx:1, fy:0,      /* focal point at top-right */
+		stop:0 #C0C5C9,  /* start of gradient */
+		stop:1 #8F9396   /* end of gradient */
 	);
-	border-style: outset;
-	border-width: 1px;
-	border-radius: 5px;
-	border-color: #043b00;
-	font-family: Arial;
-	font-size: 24px;
+	border-style: outset; /* set the border style */
+	border-width: 1px; /* set the border width */
+	border-radius: 5px; /* set the border radius */
+	border-color: #043b00; /* set the border color */
+	font-family: Arial; /* set the font */
+	font-size: 24px; /* set the font size */
 }
 
 QComboBox:hover {
-	background: qradialgradient(
-		cx:1, cy:0,
-		radius:1,
-		fx:1, fy:0,
-		stop:0 #A8ADB1,
-		stop:1 #787C7F
+	background: qradialgradient( /* background set to a radial gradient */
+		cx:1, cy:0,		 /* Center at top-right */
+		radius:1,        /* set the radius to the size of the screen */
+		fx:1, fy:0,      /* focal point at top-right */
+		stop:0 #A8ADB1,  /* start of gradient */
+		stop:1 #787C7F   /* end of gradient */
 	);
 }
 
 /* the object that holds the button */
 QComboBox::drop-down {
-	background: qradialgradient(
-		cx:1, cy:0,
-		radius:1,
-		fx:1, fy:0,
-		stop:0 #003461,
-		stop:1 #001F41
+	background: qradialgradient( /* background set to a radial gradient */
+		cx:1, cy:0,		 /* Center at top-right */
+		radius:1,        /* set the radius to the size of the screen */
+		fx:1, fy:0,      /* focal point at top-right */
+		stop:0 #003461,  /* start of gradient */
+		stop:1 #001F41   /* end of gradient */
 	);
 }
 
 QComboBox::drop-down:hover {
-	background: qradialgradient(
-		cx:1, cy:0,
-		radius:1,
-		fx:1, fy:0,
-		stop:0 #001F3B,
-		stop:1 #001228
+	background: qradialgradient( /* background set to a radial gradient */
+		cx:1, cy:0,		 /* Center at top-right */
+		radius:1,        /* set the radius to the size of the screen */
+		fx:1, fy:0,      /* focal point at top-right */
+		stop:0 #001F3B,  /* start of gradient */
+		stop:1 #001228   /* end of gradient */
 	);
 }
 
 /* drop down 'buttons' themselves */
 QComboBox QAbstractItemView {
-	background: qradialgradient(
-		cx:1, cy:0,
-		radius:1,
-		fx:1, fy:0,
-		stop:0 #003461,
-		stop:1 #001F41
+	background: qradialgradient( /* background set to a radial gradient */
+		cx:1, cy:0,		 /* Center at top-right */
+		radius:1,        /* set the radius to the size of the screen */
+		fx:1, fy:0,      /* focal point at top-right */
+		stop:0 #003461,  /* start of gradient */
+		stop:1 #001F41   /* end of gradient */
 	);
-	color: white;
-	border-style: outset;
-	border-width: 1px;
-	border-bottom-left-radius: 5px;
-	border-bottom-right-radius: 5px;
-	border-color: black;
-	padding: 5px;
-	font-size: 24px;
+	color: white; /* set the text color to white */
+	border-style: outset; /* set the border style */
+	border-width: 1px; /* set the border width */
+	border-bottom-left-radius: 5px; /* set the border radius */
+	border-bottom-right-radius: 5px; /* set the border radius */
+	border-color: black; /* set the border color to black */
+	padding: 5px; /* set the padding */
+	font-size: 24px; /* set the font size */
 }
 
 /* tabs */
-/* doesn't really do anything */
-QTabWidget {
-	background-color: red;
-}
-
 QTabWidget::pane {
-	background-color: yellow;
-	/* border: 1px solid black; */
-}
-
-QTabWidget::tab-bar {
-	background-color: blue;
+	background-color: black; /* set the background color */
 }
 
 QTabBar::tab {
-	background: qradialgradient(
-		cx:1, cy:0,
-		radius:1,
-		fx:1, fy:0,
-		stop:0 #003461, /* #003C6B, /* #002D52, /* #003366, */ /* #A4508B, */
-		stop:1 #001F41 /* #002544 /* #001B38 /* #000033 */ /* #5F0A87 */
+	background: qradialgradient( /* background set to a radial gradient */
+		cx:1, cy:0,		 /* Center at top-right */
+		radius:1,        /* set the radius to the size of the screen */
+		fx:1, fy:0,      /* focal point at top-right */
+		stop:0 #003461,  /* start of gradient */
+		stop:1 #001F41   /* end of gradient */
 	);
 	color: white;            /* Tab text color */
-	/* padding: 10px;             /* Padding inside tabs */
-	/* border: 1px solid #cccccc; /* Tab border */
-	/* border-bottom: none;       /* Remove bottom border to connect with pane */
 	border-radius: 4px 4px 0 0; /* Rounded top corners */
-	/* border-radius: 5px 5px; */
-	font-size: 24px;
+	font-size: 24px; /* font size */
 }
 
 QTabBar::tab:hover {
-	background: qradialgradient(
-		cx:1, cy:0,
-		radius:1,
-		fx:1, fy:0,
-		stop:0 #001F3B,
-		stop:1 #001228
+	background: qradialgradient( /* background set to a radial gradient */
+		cx:1, cy:0,		 /* Center at top-right */
+		radius:1,        /* set the radius to the size of the screen */
+		fx:1, fy:0,      /* focal point at top-right */
+		stop:0 #001F3B,  /* start of gradient */
+		stop:1 #001228   /* end of gradient */
 	);
 }
 
-/* steel blue gradient */
+/* gray */
 QTabBar::tab:selected {
-	background: #8F9396;
+	background: #8F9396; /* regular color same as background gray */
 	color: white;            /* Active tab text color */
-	/* border: 1px solid #cccccc; /* Active tab border */
-	/* border-bottom: 1px solid #ffffff; /* Seamless connection to pane */
 }
 
 QTabBar::tab:selected:hover {
-	background: #8F9396; /* #787C7F; */
+	background: #8F9396; /* hover color no change */
 }

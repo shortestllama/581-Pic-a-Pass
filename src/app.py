@@ -152,7 +152,7 @@ class SignupScreen(QDialog):
             self.accept() #close this screen and return true
 
         except Exception as e:
-            self.status_label.setText("Error saving password: {e}.")
+            self.status_label.setText(f"Error saving password: {e}.")
 
 # Signup Screen class
 # Subclass QMainWindow to customize your application's main window

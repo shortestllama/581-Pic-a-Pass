@@ -9,7 +9,7 @@ import EditPasswordProfile
 import csv #for reading from csv and creating buttons
 import OptionsWindow
 from password_strength import p_strength #password strength function
-from qt_material import apply_stylesheet
+#from qt_material import apply_stylesheet
 
 class PasswordProfile( QWidget ):
     def __init__(self, label, pw_page, hash, cipher):
@@ -178,7 +178,16 @@ class SearchableButtonList(QWidget):
         
         # Scrollable area setup
         self.scroll_area = QScrollArea(self)
-        apply_stylesheet(self.scroll_area, theme='dark_teal.xml')
+        self.scroll_area.setStyleSheet("""
+            background: qradialgradient(
+                cx:1, cy:0,		 /* Center at top-right */
+                radius:1.5, 	 /* Radius goes outside the radius of the screen */
+                fx:1, fy:0,		 /* Focal point at top-right */
+                stop:0 #66ff66, 
+                stop:1 #043b00 	 /* Darker than we actually see because radius is larger than we see */
+            );
+        """)
+        #apply_stylesheet(self.scroll_area, theme='dark_teal.xml')
         self.scroll_area.setWidgetResizable(True)
         self.main_layout.addWidget( self.scroll_area )
         self.refresh( )

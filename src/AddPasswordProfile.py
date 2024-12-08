@@ -13,10 +13,10 @@ Known fault(s): None
 #########################################################################################
 | Author       |  Date      | Revise Description                                        |
 #########################################################################################
-| Ben Schulte  | 11/23/24   | Document created                                          |
-| Ben Schulte  | 11/24/24   | Updated functions to output base64 encoded data to files  |
-| Ben Schulte  | 12/3/24    | Added functions for doing steganography                   |
-| Ben Schulte  | 12/8/24    | Added final comments to the document                      |
+| Jesse DeBok  | 11/07/24   | Document created                                          |
+| Jesse DeBok  | 11/10/24   | Added password generation                                 |
+| Ben Schulte  | 11/24/24   | Added checking password strength functionality            |
+| Ben Schulte  | 12/8/24    | Added final comments to the document and color changes    |
 #########################################################################################
 '''
 import sys
@@ -32,20 +32,20 @@ from qt_material import apply_stylesheet
 class AddPasswordProfile(QWidget):
     def __init__(self, super_window, super_object, hash, cipher):
         super().__init__()
-        self.hash = hash
-        self.cipher = cipher
-        self.initUI( super_window, super_object )
+        self.hash = hash #from sign in page
+        self.cipher = cipher #from sign in page
+        self.initUI( super_window, super_object ) #use super objects to proper refresh searchable button list
 
     def initUI( self, super_window, super_object ):
         # Set up the form layout
-        layout = QVBoxLayout()
-        form_layout = QFormLayout()
+        layout = QVBoxLayout() #general layout
+        form_layout = QFormLayout() #form to edit
         
         # Input fields
-        self.input1 = QLineEdit()
-        self.input2 = QLineEdit()
-        self.input3 = QLineEdit()
-        self.input4 = QLineEdit()
+        self.input1 = QLineEdit() #each input is a a part of the password profile. WebURL
+        self.input2 = QLineEdit() #Username
+        self.input3 = QLineEdit() #Password
+        self.input4 = QLineEdit() #notes
         self.input1.setStyleSheet("color: white;") # Set the color
         self.input2.setStyleSheet("color: white;") # Set the color
         self.input3.setStyleSheet("color: white;") # Set the color
@@ -80,8 +80,8 @@ class AddPasswordProfile(QWidget):
 
     def save_to_csv(self):
         # Get values from input fields
-        auth_data = self.input2.text().encode('utf-8')
-        ciphertext, nonce = self.cipher.encrypt(self.input3.text(), auth_data)
+        auth_data = self.input2.text().encode('utf-8') #encode as utf
+        ciphertext, nonce = self.cipher.encrypt(self.input3.text(), auth_data) #encrypt for storing
         data = [
             self.input1.text(),
             self.input2.text(),
@@ -89,7 +89,7 @@ class AddPasswordProfile(QWidget):
             self.input4.text(),
             time.time(),
             nonce.decode('utf-8')
-        ]
+        ] #data to store in csv file
         
         # Open file dialog to choose where to save the CSV
         file_path = "passwords.csv"
@@ -110,7 +110,7 @@ class AddPasswordProfile(QWidget):
         except Exception as e:
             QMessageBox.critical(self, "Error", f"Failed to save data: {e}")
     def generate_pw( self ):
-        pw = PasswordGenerator()
+        pw = PasswordGenerator() #use generate password function
         self.input3.setText( pw.generate_password() )
     def check_password_strength( self ):
         if self.input3.text() == "":

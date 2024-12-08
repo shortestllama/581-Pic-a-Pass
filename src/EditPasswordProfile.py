@@ -1,3 +1,24 @@
+'''
+Artifact: Pic-a-Pass EditPasswordProfile.py
+Description: Window to edit passwords within the passwords.csv
+Author(s): Jesse DeBok
+Precondition(s): Main Window has been created to pass in the super window and object for updating.
+Postcondition(s): None
+Error(s):
+- File save error: Cannot save to passwords.csv as it does not exist or has other writing issues.
+Side effect(s): Showing can fail if passwords.csv has been changed.
+Invariant(s): None
+Known fault(s): None
+
+#########################################################################################
+| Author       |  Date      | Revise Description                                        |
+#########################################################################################
+| Jesse DeBok  | 11/10/24   | Document created                                          |
+| Jesse DeBok  | 11/24/24   | Check strength and bug fixes                              |
+| Jesse DeBok  | 11/26/24   | Refreshes main page                                       |
+| Full Team    | 12/8/24    | Added final comments to the document and color changes    |
+#########################################################################################
+'''
 import sys
 import csv
 import time
@@ -8,14 +29,14 @@ from password_strength import p_strength #password strength function
 class EditPasswordProfile(QWidget):
     def __init__(self, super_window, super_object, label, password_profile_window, hash, cipher):
         super().__init__()
-        self.hash = hash
-        self.cipher = cipher
-        self.super_object = super_object
-        self.initUI( super_window, label, password_profile_window )
+        self.hash = hash #from sign in page
+        self.cipher = cipher #from sign in page
+        self.super_object = super_object #used for refreshing
+        self.initUI( super_window, label, password_profile_window ) #create page
 
     def initUI( self, super_window, label, password_profile_window ):
         self.setWindowTitle("Edit Password Profile")
-        self.resize(900, 600)
+        self.resize(900, 600) #consistent size
         
         # Display label in new window
         self.layout = QVBoxLayout()
@@ -64,8 +85,6 @@ class EditPasswordProfile(QWidget):
         self.layout.addWidget(save_button)
         
         self.setLayout( self.layout)
-        #self.show()
-
     def save_to_csv(self):
         # Get values from input fields
         auth_data = self.label_unameReal.text().encode('utf-8')
@@ -77,7 +96,7 @@ class EditPasswordProfile(QWidget):
             self.label_noteReal.text(),
             time.time(),
             nonce.decode('utf-8')
-        ]
+        ] #save nonce as well
 
         # Open file dialog to choose where to save the CSV
         file_path = "passwords.csv"
@@ -102,7 +121,7 @@ class EditPasswordProfile(QWidget):
             writer.writerows(lines_to_keep)
         self.super_object.refresh() #refresh main page
     def generate_pw( self ):
-        pw = PasswordGenerator()
+        pw = PasswordGenerator() #use password generator
         self.label_pwReal.setText( pw.generate_password() )
     def check_password_strength( self ):
         if self.label_pwReal.text() == "":

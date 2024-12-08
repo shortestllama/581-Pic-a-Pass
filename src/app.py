@@ -22,6 +22,7 @@ from PyQt5.QtWidgets import (
     QFrame,
     QDialog
 )
+from qt_material import apply_stylesheet
 
 #def create_pw_page( self ):
 #    #read CSV file
@@ -168,6 +169,7 @@ class MainWindow(QMainWindow):
 
         #password page
         self.pw_page = SearchableButtonList.SearchableButtonList( my_hash, my_cipher )
+        apply_stylesheet(self.pw_page, theme='dark_teal.xml')
         self.pw_page.setObjectName("pw")
         
         #breach page
@@ -176,6 +178,8 @@ class MainWindow(QMainWindow):
 
         #Tabs
         self.w = TabWidget.TabWidget()
+        apply_stylesheet(self.w, theme='dark_teal.xml')
+
         self.w.setStyleSheet("""
             background-color: #8F9396;
         """)
@@ -206,13 +210,7 @@ def main():
     app = QApplication(sys.argv)
     splash = SplashScreen.SplashScreen()
     splash.show()
-
-    with open("styles.qss", "r") as file:
-            app.setStyleSheet(file.read())
-
-    # Simulate loading process
-    import time
-    #time.sleep(3)
+    apply_stylesheet(app, theme='dark_teal.xml')
 
     # Check if the Hashed Password file exists
     hashedpass_file = Path(hash.PATH)
@@ -226,6 +224,7 @@ def main():
         splash.finish(login)
         if login.exec_() == QDialog.Accepted: #wait for dialog to close
             window = MainWindow( hash, cipher ) #CREATE main window
+            apply_stylesheet(window, theme='dark_teal.xml')
             window.resize( 900, 600 ) #width, height
             window.show()
     

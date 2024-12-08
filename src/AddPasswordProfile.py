@@ -15,8 +15,8 @@ Known fault(s): None
 #########################################################################################
 | Jesse DeBok  | 11/07/24   | Document created                                          |
 | Jesse DeBok  | 11/10/24   | Added password generation                                 |
-| Ben Schulte  | 11/24/24   | Added checking password strength functionality            |
-| Ben Schulte  | 12/8/24    | Added final comments to the document and color changes    |
+| Jesse DeBok  | 11/24/24   | Added checking password strength functionality            |
+| Jesse DeBok  | 12/8/24    | Added final comments to the document and color changes    |
 #########################################################################################
 '''
 import sys

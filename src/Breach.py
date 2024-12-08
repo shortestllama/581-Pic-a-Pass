@@ -1,7 +1,7 @@
 import hashlib
 import requests
 import csv
-from PyQt5.QtWidgets import (QWidget, QFormLayout, QLabel, QProgressBar, 
+from PyQt5.QtWidgets import (QWidget, QFormLayout, QLabel, 
                           QVBoxLayout, QScrollArea, QPushButton)
 from PyQt5.QtCore import Qt, QThread, pyqtSignal
 import os
@@ -51,20 +51,22 @@ class APIChecker:
         # Return false iff the suffix isnt in the response
         return 0
 
+# Class for the worker thread to check passwords async
 class PasswordCheckerThread(QThread):
-    progress = pyqtSignal(int)
-    result = pyqtSignal(str, str, int)  # website, username, num_breaches
-    error = pyqtSignal(str)
-    finished = pyqtSignal()
+    result = pyqtSignal(str, str, int)  # Breach found signal
+    error = pyqtSignal(str) # Error signal
+    finished = pyqtSignal() # Finished signal
 
+    # Constructor that takes in the APIchecker, list of passwords, and the cipher
     def __init__(self, checker, passwords, cipher):
         super().__init__()
         self.checker = checker
         self.passwords = passwords
         self.cipher = cipher
 
+    # Run checks
     def run(self):
-        total = len(self.passwords)
+        # This indicates some sort of error has happened when parsing csv
         for i, row in enumerate(self.passwords):
             try:
                 # Expect: website, username, password, notes, last_updated
@@ -72,6 +74,7 @@ class PasswordCheckerThread(QThread):
                     self.error.emit(f"Row {i+1} has insufficient data")
                     continue
                     
+                # Grab the website, username, and encrypted password
                 website = row[0]
                 username = row[1]
                 encrypted_password = row[2]
@@ -87,16 +90,19 @@ class PasswordCheckerThread(QThread):
                     self.error.emit(f"Failed to decrypt password for {website}/{username}: {str(e)}")
                     continue
 
+                # Get the number of breaches
                 num_breaches = self.checker.check_password(decrypted_password)
+
+                # If a breach has been found, emit the result signal
                 if num_breaches > 0:
                     self.result.emit(website, username, num_breaches)
+            # If there was an error, emit the signal as an error
             except ConnectionError as e:
                 self.error.emit(f"Error checking {website}/{username}: {str(e)}")
             except Exception as e:
                 self.error.emit(f"Error processing row {i+1}: {str(e)}")
             
-            self.progress.emit(int((i + 1) / total * 100))
-        
+        # Emit the finished signal once finished checking
         self.finished.emit()
 
 def create_breach_page(main_window, cipher) -> QWidget:
@@ -121,11 +127,6 @@ def create_breach_page(main_window, cipher) -> QWidget:
     header.setStyleSheet("font-size: 14px; font-weight: bold; margin: 10px;")
     main_layout.addWidget(header)
     
-    # Add progress bar
-    progress = QProgressBar()
-    progress.setVisible(False)
-    main_layout.addWidget(progress)
-    
     # Add scroll area
     main_layout.addWidget(scroll)
     
@@ -133,6 +134,7 @@ def create_breach_page(main_window, cipher) -> QWidget:
     check_button = QPushButton("Check Passwords")
     main_layout.addWidget(check_button)
     
+    # Function to start checking
     def start_check():
         # Clear previous results
         for i in reversed(range(results_layout.rowCount())):
@@ -141,65 +143,62 @@ def create_breach_page(main_window, cipher) -> QWidget:
         try:
             # Try to read password file
             if not os.path.exists('passwords.csv'):
-                error_label = QLabel("Error: passwords.csv not found!")
-                error_label.setStyleSheet("color: red;")
-                results_layout.addRow(error_label)
+                error_label = QLabel("Error: passwords.csv not found!") # If the passwords file isnt there tell the user
+                error_label.setStyleSheet("color: red;") # Set the color to red
+                results_layout.addRow(error_label) # Add the error message to the screen
                 return
                 
-            with open('passwords.csv', 'r') as file:
+            with open('passwords.csv', 'r') as file: # Open the passwords file
                 passwords = list(csv.reader(file))
             
-            if not passwords:
-                results_layout.addRow(QLabel("No passwords found in file!"))
+            if not passwords: # If the passwords file doesnt exist,
+                results_layout.addRow(QLabel("No passwords found in file!")) # Tell the user the file cant be found
                 return
                 
-            # Remove header row if present
-            if passwords[0][0].lower() in ['website', 'site', 'url']:
-                passwords = passwords[1:]
-                
-            if not passwords:
-                results_layout.addRow(QLabel("No passwords found after header!"))
-                return
-                
-            # Disable button and show progress
+            # Disable button
             check_button.setEnabled(False)
-            progress.setVisible(True)
-            progress.setValue(0)
             
             # Create and start worker thread
             thread = PasswordCheckerThread(checker, passwords, cipher)
             
+            # Function for the result of the worker thread
             def on_result(website, username, num_breaches):
-                label = QLabel(f"Password for {website} ({username}) has been breached {num_breaches} times!")
-                label.setStyleSheet("color: #d32f2f; font-weight: bold;")
-                results_layout.addRow(label)
+                # Print the website and how many times that password has been breached
+                label = QLabel(f"Password for {website} ({username}) has been breached {num_breaches} times!") 
+                label.setStyleSheet("color: #d32f2f; font-weight: bold;") # Set the color and bold text
+                results_layout.addRow(label) # Add the result to the screen
                 
+            # Function for error sent from worker thread
             def on_error(error_msg):
-                label = QLabel(error_msg)
-                label.setStyleSheet("color: #f57c00;")
-                results_layout.addRow(label)
+                label = QLabel(error_msg) # Print the error message
+                label.setStyleSheet("color: #f57c00;") # Set the color
+                results_layout.addRow(label) # Add it to the screen
                 
+            # Function for when the worker thread is finished
             def on_finished():
-                progress.setVisible(False)
-                check_button.setEnabled(True)
-                if results_layout.rowCount() == 0:
-                    label = QLabel("No breached passwords found!")
-                    label.setStyleSheet("color: green; font-weight: bold;")
-                    results_layout.addRow(label)
+                check_button.setEnabled(True) #Re enable the check passwords button
+                if results_layout.rowCount() == 0: #If no breaches were found
+                    label = QLabel("No breached passwords found!") # Tell the user no breaches were found
+                    label.setStyleSheet("color: green; font-weight: bold;") # Set the font to green color
+                    results_layout.addRow(label) # Add the message to the screen
             
             # Keep a reference to the thread to prevent garbage collection
             breach_page.thread = thread
                 
+            # Connect the signal sent from the worker thread to the main one
             thread.result.connect(on_result)
             thread.error.connect(on_error)
-            thread.progress.connect(progress.setValue)
             thread.finished.connect(on_finished)
+
+            # Start the worker thread
             thread.start()
                 
+        # This notifies the user that an error occured when opening password file
         except Exception as e:
             error_label = QLabel(f"Error reading password file: {str(e)}")
             error_label.setStyleSheet("color: red;")
             results_layout.addRow(error_label)
     
+    # Connects the button to the start_check function
     check_button.clicked.connect(start_check)
-    return breach_page
+    return breach_page # Return the breach page for adding to the main window

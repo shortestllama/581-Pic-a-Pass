@@ -174,6 +174,7 @@ class MainWindow(QMainWindow):
         
         #breach page
         self.breach_page = create_breach_page(self, my_cipher)
+        apply_stylesheet(self.breach_page, theme='dark_teal.xml')
         self.breach_page.setObjectName("breach")
 
         #Tabs

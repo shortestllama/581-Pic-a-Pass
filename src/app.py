@@ -1,3 +1,29 @@
+'''
+Artifact: Pic-a-Pass app.py
+Description: main class that runs the application
+Author(s): Jesse DeBok
+Precondition(s): Have all the required dependencies
+Postcondition(s): Cleanly exits
+Error(s): None
+Side effect(s): None
+Invariant(s): None
+Known fault(s): None
+
+#########################################################################################
+| Author       |  Date      | Revise Description                                        |
+#########################################################################################
+| Jesse DeBok  | 11/04/24   | Document created                                          |
+| Ben/Jack     | 11/07/24   | Signup and Login                                          |
+| Team         | 11/10/24   | Splash and Breach                                         |
+| Jack Ford    | 11/24/24   | Visuals                                                   |
+| Jack Ford    | 11/26/24   | Bug Fixes                                                 |
+| Caden        | 12/04/24   | Visuals                                                   |
+| Jack Ford    | 12/05/24   | Visuals                                                   |
+| Team         | 12/06/24   | Visuals                                                   |
+| Team         | 12/07/24   | Visuals                                                   |
+| Jesse DeBok  | 12/08/24   | Comments and Visuals                                      |
+#########################################################################################
+'''
 from Breach import create_breach_page
 from cryptoutils import PasswordHash, PasswordCipher 
 import sys

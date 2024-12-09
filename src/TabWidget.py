@@ -1,6 +1,23 @@
 '''
-TabWidget Class
-Contains specification of the TabWidget class for the main window of the program.
+Artifact: Pic-a-Pass TabWidget.py
+Description: Class to show tab widgets
+Author(s): Jesse DeBok
+Precondition(s): Main window created
+Postcondition(s): None
+Error(s): None
+Side effect(s): None
+Invariant(s): None
+Known fault(s): None
+
+#########################################################################################
+| Author       |  Date      | Revise Description                                        |
+#########################################################################################
+| Jesse DeBok  | 11/07/24   | Document created                                          |
+| Team         | 11/24/24   | Visuals                                                   |
+| Jesse DeBok  | 12/06/24   | Comments                                                  |
+| Team         | 12/07/24   | Visuals                                                   |
+| Jesse DeBok  | 12/08/24   | Add comments                                              |
+#########################################################################################
 '''
 from PyQt5 import QtWidgets, QtCore #Needed imports
 class TabBar(QtWidgets.QTabBar): #used within the TabWidget class.  This is the tabs on the side

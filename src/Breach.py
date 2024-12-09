@@ -157,9 +157,6 @@ def create_breach_page(main_window, cipher) -> QWidget:
             
             if not passwords: # If the passwords file doesnt exist,
                 results_layout.addRow(QLabel("No passwords found in file!")) # Tell the user the file cant be found
-                results_layout.setStyleSheet("""
-                    font-size: 16px;
-                """)
                 return
                 
             # Disable button

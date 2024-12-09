@@ -20,4 +20,5 @@
 
 **/*.pap
 
-/src/img/*
+**/img/encryptionkey.png
+**/img/masterpassword.png

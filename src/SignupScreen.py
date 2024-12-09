@@ -1,3 +1,21 @@
+'''
+Artifact: Pic-a-Pass LoginScreen.py
+Description: Window to log into the main application
+Author(s): Jesse DeBok
+Precondition(s): User has signed up before.
+Postcondition(s): Main window is opened up.
+Error(s): None
+Side effect(s): None
+Invariant(s): None
+Known fault(s): None
+
+#########################################################################################
+| Author       |  Date      | Revise Description                                        |
+#########################################################################################
+| Ben Schulte  | 11/26/24   | Document created                                          |
+| Jesse DeBok  | 12/08/24   | Add comments                                              |
+#########################################################################################
+'''
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtWidgets import (

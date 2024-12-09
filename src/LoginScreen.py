@@ -1,3 +1,21 @@
+'''
+Artifact: Pic-a-Pass LoginScreen.py
+Description: Window to log into the main application
+Author(s): Jesse DeBok
+Precondition(s): User has signed up before.
+Postcondition(s): Main window is opened up.
+Error(s): None
+Side effect(s): None
+Invariant(s): None
+Known fault(s): None
+
+#########################################################################################
+| Author       |  Date      | Revise Description                                        |
+#########################################################################################
+| Jesse DeBok  | 11/26/24   | Document created                                          |
+| Jesse DeBok  | 12/08/24   | Add comments                                              |
+#########################################################################################
+'''
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtWidgets import (
@@ -12,8 +30,8 @@ class LoginScreen(QDialog):
     def __init__(self, my_hash, my_cipher):
         super().__init__()
         self.setObjectName("login_screen")
-        self.my_hash = my_hash
-        self.my_cipher = my_cipher
+        self.my_hash = my_hash #from sign in
+        self.my_cipher = my_cipher #from sign in
         self.initUI()
 
     def initUI(self):
@@ -56,7 +74,7 @@ class LoginScreen(QDialog):
 
     def check_password(self):
         password = self.password_input.text()
-        correct = self.my_hash.check_pwd(password)
+        correct = self.my_hash.check_pwd(password) #check hash against entry
         if correct:
             self.my_cipher.gen_key(password)
             self.label.setText("Login successful")

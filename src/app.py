@@ -39,6 +39,7 @@ class LoginScreen(QDialog):
 
         # Set up picture
         self.pic = QLabel("")
+        self.pic.setFixedSize(875, 400)
         self.pic.setAlignment(Qt.AlignCenter)
         pixmap = QPixmap("gear.png")
         scaled_pixmap = pixmap.scaled(
@@ -49,6 +50,7 @@ class LoginScreen(QDialog):
 
         # Title label
         self.label = QLabel('Enter Password')
+        self.label.setFixedSize(875, 45)
         self.label.setAlignment(Qt.AlignCenter)
         layout.addWidget(self.label)
 
@@ -95,9 +97,25 @@ class SignupScreen(QDialog):
         self.setWindowTitle("Sign Up")
         self.setFixedSize(900, 600)
 
-
         # Layout setup
         layout = QVBoxLayout()
+
+        # Set up picture
+        self.pic = QLabel("")
+        self.pic.setFixedSize(875, 350)
+        self.pic.setAlignment(Qt.AlignCenter)
+        pixmap = QPixmap("gear.png")
+        scaled_pixmap = pixmap.scaled(
+            150, 150, Qt.KeepAspectRatio, Qt.SmoothTransformation
+        )
+        self.pic.setPixmap(scaled_pixmap)
+        layout.addWidget(self.pic)
+
+        # Status label for feedback
+        self.status_label = QLabel("", self)
+        self.status_label.setFixedSize(875, 45)
+        self.status_label.setAlignment(Qt.AlignCenter)
+        layout.addWidget(self.status_label)
 
         # Password input
         self.password_input = QLineEdit(self)
@@ -115,11 +133,7 @@ class SignupScreen(QDialog):
         self.signup_button = QPushButton("Sign Up", self)
         self.signup_button.clicked.connect(self.signup)
         layout.addWidget(self.signup_button)
-
-        # Status label for feedback
-        self.status_label = QLabel("", self)
-        layout.addWidget(self.status_label)
-
+        
         self.setLayout(layout)
 
     def signup(self):

@@ -27,7 +27,6 @@ from cryptoutils import PasswordCipher
 from PyQt5.QtGui import QFont
 from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QFormLayout, QLineEdit, QPushButton, QMessageBox, QLabel
 from password_strength import p_strength #password strength function
-from qt_material import apply_stylesheet
 
 class AddPasswordProfile(QWidget):
     def __init__(self, super_window, super_object, hash, cipher):

@@ -1,3 +1,23 @@
+'''
+Artifact: Pic-a-Pass Breach.py
+Description: Breach page
+Author(s): Caden
+Precondition(s): Main Window has been created to display in tab.
+Postcondition(s): None
+Error(s):
+- Connection error: if the page cannot access the internet there is a connection error
+Side effect(s): None
+Invariant(s): None
+Known fault(s): None
+
+#########################################################################################
+| Author       |  Date      | Revise Description                                        |
+#########################################################################################
+| Caden        | 11/10/24   | Creation                                                  |
+| Team         | 11/24/24   | Visuals                                                   |
+| Team         | 12/08/24   | Bug Fixes                                                 |
+#########################################################################################
+'''
 import hashlib
 import requests
 import csv

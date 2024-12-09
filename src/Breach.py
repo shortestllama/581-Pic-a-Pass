@@ -192,9 +192,6 @@ def create_breach_page(main_window, cipher) -> QWidget:
                     """)
                     results_layout.addRow(label) # Add the message to the screen
             
-            # Keep a reference to the thread to prevent garbage collection
-            breach_page.thread = thread
-                
             # Connect the signal sent from the worker thread to the main one
             thread.result.connect(on_result)
             thread.error.connect(on_error)

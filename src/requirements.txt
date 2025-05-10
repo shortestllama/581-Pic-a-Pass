@@ -15,3 +15,6 @@ pytz==2024.2
 requests==2.32.3
 stepic==0.5.0
 urllib3==2.2.3
+flask
+pillow
+werkzeug

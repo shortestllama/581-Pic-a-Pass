@@ -283,4 +283,4 @@ def main():
     #app.exec() 
     
 if __name__ == "__main__":
-    main() #call main
+    app.run(host="0.0.0.0", port=10000)

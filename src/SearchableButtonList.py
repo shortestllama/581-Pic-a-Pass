@@ -124,7 +124,7 @@ class PasswordProfile( QWidget ):
         utc_time = datetime.fromtimestamp( float( label[ 4 ] ), tz=timezone.utc) #fix time
         central_tz = pytz.timezone('America/Chicago') #convert to central time (Best time)
         central_now = utc_time.astimezone(central_tz)
-        self.label_widget = QLabel(f"{central_now.strftime("%m-%d-%Y %H:%M")}")
+        self.label_widget = QLabel(f"{central_now.strftime('%m-%d-%Y %H:%M')}")
         #special labels so have a different style
         self.label_widget.setStyleSheet("""
              QLabel {
